@@ -19,8 +19,8 @@ section {
     position: absolute; top: 0; left: 0; width: 100%; height: 100vh;
     padding: 0 10%; box-sizing: border-box;
     display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
-    opacity: 0; visibility: hidden; transition: opacity 0.5s ease, visibility 0.5s ease;
-    z-index: 1;
+    opacity: 0; visibility: hidden; transition: opacity 0.8s ease, visibility 0.8s ease;
+    z-index: 1; background: #050505; /* Solid background to prevent bleed-through */
 }
 section.active { opacity: 1; visibility: visible; z-index: 10; }
 
@@ -404,7 +404,7 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 
 <div id="ambient-particles"></div>
 
-<section id="s1" class="active">
+<section id="s1">
     <div id="vanta-canvas"></div>
     <h2 style="font-family: monospace; color: #00ff88; z-index: 10;"><span id="typed"></span></h2>
     <h1 class="neon-pulse">AGRI-VISION</h1>
