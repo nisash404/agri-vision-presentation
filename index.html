@@ -122,16 +122,29 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 
 /* S7 Fake Override Button */
 .execute-btn {
-    margin-top: 2rem; padding: 1rem 2rem; font-family: monospace; font-size: 1.2rem; font-weight: bold; cursor: pointer;
-    background: transparent; color: #ff3333; border: 2px solid #ff3333; border-radius: 4px;
-    box-shadow: 0 0 15px rgba(255,51,51,0.4), inset 0 0 15px rgba(255,51,51,0.2);
-    transition: all 0.3s; z-index: 20; position: relative;
+    margin-top: 2rem; padding: 1.2rem 3rem; font-family: monospace; font-size: 1.3rem; font-weight: 900; cursor: pointer;
+    background: rgba(255, 10, 10, 0.15); color: #fff; border: 2px solid #ff3333; border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(255,51,51,0.3), inset 0 0 20px rgba(255,51,51,0.3);
+    text-shadow: 0 0 10px rgba(255,255,255,0.8); letter-spacing: 2px;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 20; position: relative;
+    backdrop-filter: blur(5px);
+    animation: btnPulse 2s infinite alternate;
 }
-.execute-btn:hover { background: rgba(255,51,51,0.1); box-shadow: 0 0 30px rgba(255,51,51,0.6), inset 0 0 20px rgba(255,51,51,0.4); }
-.execute-btn:active { transform: scale(0.95); }
+@keyframes btnPulse {
+    0% { box-shadow: 0 10px 30px rgba(255,51,51,0.3), inset 0 0 20px rgba(255,51,51,0.3); }
+    100% { box-shadow: 0 15px 45px rgba(255,51,51,0.6), inset 0 0 40px rgba(255,51,51,0.5); border-color: #ff6666; }
+}
+.execute-btn:hover { 
+    background: rgba(255, 51, 51, 0.3); 
+    box-shadow: 0 20px 50px rgba(255,51,51,0.8), inset 0 0 30px rgba(255,51,51,0.6); 
+    transform: translateY(-5px) scale(1.05);
+    animation: none;
+}
+.execute-btn:active { transform: translateY(2px) scale(0.95); }
 .execute-btn.deployed { 
-    color: #00ff88; border-color: #00ff88; box-shadow: 0 0 20px rgba(0,255,136,0.6), inset 0 0 20px rgba(0,255,136,0.2); 
-    background: rgba(0,255,136,0.1); pointer-events: none;
+    color: #fff; border-color: #00ff88; text-shadow: 0 0 10px #00ff88;
+    box-shadow: 0 10px 30px rgba(0,255,136,0.4), inset 0 0 30px rgba(0,255,136,0.3); 
+    background: rgba(0,255,136,0.15); pointer-events: none; animation: none; transform: scale(1);
 }
 
 /* Global Progress Bar */
