@@ -267,10 +267,33 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 .team-member { font-size: 3.5rem; font-weight: 800; color: #ccc; font-family: monospace; opacity: 0; transform: translateY(40px) scale(0.9); transition: all 1s cubic-bezier(0.215, 0.61, 0.355, 1); letter-spacing: 2px; }
 .team-member.reveal { opacity: 1; transform: translateY(0) scale(1); color: #fff; text-shadow: 0 0 20px rgba(0,255,136,0.8), 0 0 40px rgba(0,255,136,0.4); }
 
+/* Perpetual Header / Footer */
+.perpetual-header, .perpetual-footer {
+    position: fixed; width: 100vw; left: 0; padding: 2rem 3rem; box-sizing: border-box;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: monospace; font-size: 0.8rem; letter-spacing: 3px; color: #666;
+    z-index: 1000; pointer-events: none;
+}
+.perpetual-header { top: 0; }
+.perpetual-footer { bottom: 0; }
+.accent-green { color: #00ff88; text-shadow: 0 0 8px rgba(0,255,136,0.4); }
+.status-dot { display: inline-block; width: 8px; height: 8px; background: #00ff88; border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px #00ff88; animation: flashNormal 2s infinite; }
+@keyframes flashNormal { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
 </style>
 </head>
 <body>
 <div id="progress-bar"></div>
+
+<!-- Perpetual UI Elements -->
+<div class="perpetual-header">
+    <div>AGRI-VISION // CORE_SYSTEM</div>
+    <div><span class="status-dot"></span>SYS.OP: <span class="accent-green">NORMAL</span> // UPLINK: SECURE</div>
+</div>
+<div class="perpetual-footer">
+    <div>[ INVESTOR PREVIEW / CONFIDENTIAL ]</div>
+    <div>TELEM_DAT: OP_ACTIVE // <span id="clock-display" class="accent-green">00:00:00</span></div>
+</div>
 
 <section id="s1" class="active">
     <div id="vanta-canvas"></div>
@@ -693,6 +716,16 @@ setTimeout(() => {
             goToSlide(currentSlide - 1);
         }
     });
+
+    // Perpetual Continuous Clock
+    const clockDisplay = document.getElementById('clock-display');
+    if (clockDisplay) {
+        setInterval(() => {
+            const now = new Date();
+            // Format to HH:MM:SS
+            clockDisplay.textContent = now.toTimeString().split(' ')[0];
+        }, 1000);
+    }
 
 }, 500); // Small delay ensures CDN scripts initialize first
 </script>
