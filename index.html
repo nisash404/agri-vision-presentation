@@ -114,6 +114,12 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 .milestone:nth-child(even) .dot { left: -9px; }
 .timeline.draw-line .milestone .dot { transform: scale(1); }
 
+/* S11: Thank You */
+#s11 h1 { font-size: 6rem; color: #fff; text-shadow: 0 0 30px rgba(0, 255, 136, 0.5); margin-bottom: 2rem; }
+.team-container { display: flex; gap: 4rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+.team-member { font-size: 1.5rem; color: #aaa; font-family: monospace; opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.215, 0.61, 0.355, 1); }
+.team-member.reveal { opacity: 1; transform: translateY(0); color: #00ff88; text-shadow: 0 0 10px rgba(0,255,136,0.3); }
+
 /* S10: The Nuke (Upgraded) */
 #s10 { background: #000; border: none; }
 .map-container { 
@@ -407,6 +413,19 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
     <div class="pitch" style="margin-top: 2rem;">"We don't just have concepts; we have code. Here is a live, raw feed of the map interface we are building for our next presentation. Thank you."</div>
 </section>
 
+<section id="s11">
+    <div class="buzzwords" style="color: #00ff88;">End of Transmission</div>
+    <h1>Thank You.</h1>
+    <h2 class="section-title" style="margin-top: 2rem; margin-bottom: 3rem; font-size: 1.2rem; letter-spacing: 5px; color: #555;">DEVELOPED BY</h2>
+    
+    <div class="team-container" id="team-trigger">
+        <div class="team-member">>_ NISHANT</div>
+        <div class="team-member">>_ SARVAJEET</div>
+        <div class="team-member">>_ ADHIRAJ</div>
+        <div class="team-member">>_ ADITYA</div>
+    </div>
+</section>
+
 <script>
 // Wait for external scripts to load
 setTimeout(() => {
@@ -539,6 +558,13 @@ setTimeout(() => {
                     `;
                 }, 2000); // Update every 2 seconds
             }
+        }
+
+        // S11: Team Member Reveal
+        if(sectionId === 's11') {
+            document.querySelectorAll('#s11 .team-member').forEach((el, index) => {
+                setTimeout(() => el.classList.add('reveal'), 500 + (index * 400));
+            });
         }
     }
 
