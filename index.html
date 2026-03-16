@@ -811,6 +811,14 @@ setTimeout(() => {
         
         // Add active class to new slide
         targetSection.classList.add('active');
+        
+        // Trigger glitch effect on title
+        const title = targetSection.querySelector('.section-title');
+        if (title) {
+            title.style.animation = 'none';
+            void title.offsetWidth;
+            title.style.animation = 'glitch 0.4s 1';
+        }
 
         // Update Progress Bar
         const progressPercentage = (currentSlide / (sections.length - 1)) * 100;
@@ -950,7 +958,7 @@ setTimeout(() => {
     // Mouse Wheel Scrolling
     let canScroll = true;
     document.addEventListener('wheel', (e) => {
-        if (!canScroll || document.getElementById('preloader').style.opacity === "0") return; // Allow scroll if preloader is gone, but we check fade-out class usually. 
+        if (!canScroll) return; 
         if(!document.getElementById('preloader').classList.contains('fade-out')) return; // block scroll during preloader
         initAudio(); // ensure audio can play after scroll
         
