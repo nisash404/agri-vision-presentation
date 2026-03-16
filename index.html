@@ -34,20 +34,31 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 .stat-box h3 { font-size: 4.5rem; margin: 0; color: #ff3333; text-shadow: 0 0 15px rgba(255,51,51,0.4); }
 .stat-box p { font-size: 1.2rem; color: #888; }
 
-/* S3: Paradigm Shift (Slider) */
-.slider-container { position: relative; width: 80%; max-width: 800px; height: 400px; margin: 3rem 0; background: #111; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
-.slider-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
-.img-before { background: linear-gradient(45deg, #1a4a20, #2c7a35); }
-.img-after { background: radial-gradient(circle, #ff0000 0%, #ff8800 40%, #1a4a20 80%); clip-path: inset(0 50% 0 0); }
-.slider-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; z-index: 20; }
-.slider-line { position: absolute; top: 0; bottom: 0; left: 50%; width: 4px; background: #fff; z-index: 15; pointer-events: none; transform: translateX(-50%); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+/* S3: Paradigm Shift (Automated Scanner) */
+.diagnostic-container { position: relative; width: 80%; max-width: 900px; height: 450px; margin: 3rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+.diag-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: opacity 0.5s ease; }
+.spectral-eye { opacity: 0; z-index: 2; clip-path: inset(0 100% 0 0); animation: scanReveal 6s infinite ease-in-out alternate; }
+.scanner-bar { position: absolute; top: 0; bottom: 0; left: 0%; width: 4px; background: #00ff88; z-index: 15; box-shadow: 0 0 20px #00ff88, 0 0 40px #00ff88; animation: scanBar 6s infinite ease-in-out alternate; }
+.diag-labels { position: absolute; bottom: 20px; width: 100%; display: flex; justify-content: space-between; padding: 0 30px; font-weight: bold; font-family: monospace; z-index: 20; box-sizing: border-box;}
+@keyframes scanReveal { 0%, 10% { opacity: 0; clip-path: inset(0 100% 0 0); } 15% { opacity: 1; } 90%, 100% { opacity: 1; clip-path: inset(0 0 0 0); } }
+@keyframes scanBar { 0%, 10% { left: 0%; opacity: 0; } 15% { opacity: 1; } 90%, 100% { left: 100%; opacity: 0; } }
 
-/* S4: Core Tech (SVG) */
-.svg-container { margin: 3rem 0; height: 300px; width: 100%; }
-.beam-down { stroke-dasharray: 100; stroke-dashoffset: 100; animation: shootDown 2s infinite; }
-.beam-up { stroke-dasharray: 100; stroke-dashoffset: 100; animation: bounceUp 2s infinite 1s; }
-@keyframes shootDown { to { stroke-dashoffset: 0; } }
-@keyframes bounceUp { to { stroke-dashoffset: 0; } }
+/* S4: Core Tech (Animated Beams) */
+.ndvi-tech-container { width: 100%; display: flex; flex-direction: column; align-items: center; margin: 3rem 0; gap: 2rem; }
+.satellite-source { background: #111; border: 1px solid #333; padding: 1rem 2rem; border-radius: 8px; font-family: monospace; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.sat-pulse { position: absolute; top: -5px; right: -5px; width: 15px; height: 15px; background: #00ff88; border-radius: 50%; box-shadow: 0 0 15px #00ff88; animation: pulse 1s infinite alternate; }
+.beam-grid { display: flex; gap: 4rem; width: 100%; justify-content: center; position: relative; }
+.plant-box { background: #1a1a1a; border: 1px solid #333; padding: 2rem; border-radius: 12px; position: relative; width: 200px; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.ndvi-score { font-family: monospace; font-size: 1.2rem; font-weight: bold; margin-top: 1rem; padding: 0.5rem 1rem; background: #000; border-radius: 4px; border: 1px solid #333; }
+.beam { position: absolute; font-family: monospace; font-size: 0.7rem; font-weight: bold; color: #fff; padding: 2px 6px; border-radius: 3px; }
+.incoming { top: -120px; animation: dropBeam 2s infinite linear; }
+.outgoing { top: 0px; animation: riseBeam 2s infinite linear; animation-delay: 1s; }
+.visible-light { left: 40px; border-left: 2px dashed #ff8800; color: #ff8800; height: 120px; }
+.near-ir { right: 40px; border-right: 2px dashed #00ff88; color: #00ff88; height: 120px; }
+.nir-strong { right: 40px; border-right: 4px solid #00ff88; color: #00ff88; height: 180px; }
+.nir-weak { right: 40px; border-right: 1px dotted #ff3333; color: #ff3333; height: 60px; }
+@keyframes dropBeam { 0% { clip-path: inset(0 0 100% 0); } 50%, 100% { clip-path: inset(0 0 0 0); } }
+@keyframes riseBeam { 0% { clip-path: inset(100% 0 0 0); opacity: 1; } 50% { clip-path: inset(0 0 0 0); opacity: 0; } 100% { opacity: 0; } }
 
 /* S5: Data Engine (Logos) */
 .logo-container { display: flex; gap: 3rem; margin: 3rem 0; overflow: hidden; width: 100%; justify-content: center; }
@@ -212,11 +223,20 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 <section id="s3">
     <div class="buzzwords">Invisible Spectrum Analysis • Pre-Emptive Diagnostics</div>
     <h2 class="section-title">The Paradigm Shift</h2>
-    <div class="slider-container">
-        <div class="slider-img img-before"></div>
-        <div class="slider-img img-after" id="heat-layer"></div>
-        <div class="slider-line" id="slider-line"></div>
-        <input type="range" min="0" max="100" value="50" class="slider-input" id="slider-input">
+    <div class="diagnostic-container">
+        <!-- Visual Layer (What humans see) -->
+        <div class="diag-layer human-eye" style="background: url('https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=2070&auto=format&fit=crop') center/cover;"></div>
+        
+        <!-- Spectral Layer (What Agri-Vision sees) -->
+        <div class="diag-layer spectral-eye" style="background: url('https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=2070&auto=format&fit=crop') center/cover; filter: hue-rotate(180deg) contrast(150%) saturate(200%);"></div>
+        
+        <!-- The Scanner Bar -->
+        <div class="scanner-bar"></div>
+        
+        <div class="diag-labels">
+            <span style="color: #fff; text-shadow: 0 0 10px #000;">HUMAN EYE: HEALTHY</span>
+            <span style="color: #ff3333; text-shadow: 0 0 10px #000;">AGRI-VISION: SEVERE STRESS DETECTED (T-14 DAYS)</span>
+        </div>
     </div>
     <div class="pitch">"We are shifting from observation to prevention. We detect moisture stress at the cellular level, two weeks before the human eye can see a single yellow leaf."</div>
 </section>
@@ -224,17 +244,35 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 <section id="s4">
     <div class="buzzwords">Multispectral Signatures • NDVI Algorithms • Near-Infrared Reflectance</div>
     <h2 class="section-title">The Core Technology</h2>
-    <div class="svg-container">
-        <svg width="100%" height="100%" viewBox="0 0 400 300">
-            <rect x="180" y="20" width="40" height="20" fill="#00ff88" />
-            <rect x="140" y="25" width="30" height="10" fill="#555" />
-            <rect x="230" y="25" width="30" height="10" fill="#555" />
-            <path d="M200 280 Q180 230 200 200 Q220 230 200 280" fill="#2c7a35" />
-            <line x1="200" y1="50" x2="200" y2="190" stroke="#00ff88" stroke-width="4" class="beam-down" />
-            <line x1="210" y1="190" x2="280" y2="50" stroke="#ff3333" stroke-width="4" class="beam-up" />
-        </svg>
+    
+    <div class="ndvi-tech-container">
+        <div class="satellite-source">
+            <div class="sat-pulse"></div>
+            Sentinel-2<br>Orbital Pass
+        </div>
+        
+        <div class="beam-grid">
+            <!-- Healthy Plant Box -->
+            <div class="plant-box">
+                <div style="font-size: 3rem;">🌿</div>
+                <div class="beam incoming visible-light">VIS</div>
+                <div class="beam incoming near-ir">NIR</div>
+                <div class="beam outgoing nir-strong">HIGH REFLECT</div>
+                <div class="ndvi-score" style="color: #00ff88">NDVI: 0.85</div>
+            </div>
+            
+            <!-- Stressed Plant Box -->
+            <div class="plant-box" style="filter: opacity(0.8) drop-shadow(0 0 10px rgba(255,51,51,0.2));">
+                <div style="font-size: 3rem;">🍂</div>
+                <div class="beam incoming visible-light">VIS</div>
+                <div class="beam incoming near-ir">NIR</div>
+                <div class="beam outgoing nir-weak" style="border-top: 2px dashed #ff3333; height: 30px;">LOW REFLECT</div>
+                <div class="ndvi-score" style="color: #ff3333">NDVI: 0.12</div>
+            </div>
+        </div>
     </div>
-    <div class="pitch">"Using the Normalized Difference Vegetation Index, we analyze the infrared radiation bouncing off crops. Healthy plants reflect it; dying plants absorb it. It’s an X-ray for agriculture."</div>
+
+    <div class="pitch">"Using the Normalized Difference Vegetation Index, we analyze the Near-Infrared (NIR) radiation bouncing off crops. Healthy plants strongly reflect it; dying plants absorb it. It’s an X-ray for agriculture."</div>
 </section>
 
 <section id="s5">
