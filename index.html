@@ -27,7 +27,15 @@ h1 { font-size: 4rem; margin-bottom: 0.5rem; text-shadow: 0 0 20px rgba(0,255,13
 h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 
 /* S1: Hero */
-#vanta-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+#vanta-canvas { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+    transform-origin: center center;
+    animation: driftBackground 40s infinite linear alternate;
+}
+@keyframes driftBackground {
+    0% { transform: scale(1.1) rotate(0deg) translate(0, 0); }
+    100% { transform: scale(1.3) rotate(5deg) translate(-20px, -20px); }
+}
 
 /* S2: Problem */
 .stats-grid { display: flex; gap: 4rem; margin: 3rem 0; z-index: 10; flex-wrap: wrap; justify-content: center; }
@@ -495,15 +503,15 @@ setTimeout(() => {
             const counters = document.querySelectorAll('#s2 .counter');
             counters.forEach(counter => {
                 const target = +counter.getAttribute('data-target');
-                if (counter.innerText != '0') return; // Only animate once
+                if (counter.textContent.trim() !== '0') return; // Only animate once
                 const updateCount = () => {
-                    const count = +counter.innerText;
+                    const count = +(counter.textContent.replace(/,/g, ''));
                     const inc = Math.ceil(target / 80);
                     if (count < target) {
-                        counter.innerText = count + inc;
+                        counter.textContent = count + inc;
                         setTimeout(updateCount, 20);
                     } else {
-                        counter.innerText = target.toLocaleString();
+                        counter.textContent = target.toLocaleString();
                     }
                 };
                 updateCount();
