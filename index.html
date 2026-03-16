@@ -540,6 +540,14 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
         <div class="logo slide-in-right">Python</div>
         <div class="logo slide-in-right">Earth Engine</div>
     </div>
+    
+    <!-- Fake Auto-Scrolling Backend Terminal -->
+    <div style="background: #050505; border: 1px solid #333; border-radius: 5px; width: 100%; max-width: 600px; height: 180px; margin: 1rem auto 2rem; padding: 10px; overflow: hidden; position: relative; box-shadow: 0 0 15px rgba(0,255,136,0.1) inset;">
+        <div style="color: #555; font-family: monospace; font-size: 0.8rem; border-bottom: 1px solid #222; padding-bottom: 5px; margin-bottom: 10px; text-align: left;">>_ AGRI-VISION // BACKEND_UPLINK</div>
+        <div id="terminal-logs" style="color: #00ff88; font-family: monospace; font-size: 0.85rem; line-height: 1.4; text-align: left; height: 100%; overflow-y: auto;">
+        </div>
+    </div>
+    
     <div class="pitch">"We don't rely on expensive ground sensors. We hijack petabytes of free data from the Sentinel-2 satellite constellation, processing it via Google's infrastructure."</div>
 </section>
 
@@ -568,7 +576,7 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
     <div class="automation-container">
         <div class="pulse-ring"></div>
     </div>
-    <button class="execute-btn" id="override-btn" onclick="deployTankers()">[ OVERRIDE: DEPLOY WATER TANKERS ]</button>
+    <button class="execute-btn" id="override-btn">[ OVERRIDE: DEPLOY WATER TANKERS ]</button>
     <div class="pitch" style="margin-top: 2rem;">"Gram Panchayats don't have to look at the data. The data finds them. Our automated triggers send SMS alerts the second a threshold is breached."</div>
 </section>
 
@@ -1020,6 +1028,48 @@ setTimeout(() => {
         };
         var chart = new ApexCharts(document.querySelector("#moisture-chart"), options);
         chart.render();
+    }
+
+    // Fake Backend Log Generator
+    const terminalLogs = document.getElementById('terminal-logs');
+    const logMessages = [
+        "[INFO] Establishing API handshake with ESA Sentinel-2...",
+        "[OK] Connection established. Latency: 24ms.",
+        "[WARN] Cloud cover detected at 12%. Applying cloud-masking algorithm.",
+        "[INFO] Ingesting Tile T44P_20260317...",
+        "[OK] Multi-spectral data downloaded: 1.2GB.",
+        "[INFO] Processing Near-Infrared (Band 8) and Red (Band 4)...",
+        "[OK] NDVI matrix calculated in 412ms.",
+        "[INFO] Correlating moisture map with topographical data...",
+        "[ALERT] Moisture anomaly detected in Sector 4.",
+        "[INFO] Updating state database pipeline..."
+    ];
+
+    let logIndex = 0;
+    function addLog() {
+        if (terminalLogs) {
+            const newLog = document.createElement('div');
+            newLog.innerText = `[${new Date().toISOString().split('T')[1].slice(0,-1)}] ${logMessages[logIndex]}`;
+            terminalLogs.appendChild(newLog);
+            terminalLogs.scrollTop = terminalLogs.scrollHeight; // Auto-scroll to bottom
+            
+            logIndex = (logIndex + 1) % logMessages.length; // Loop infinitely
+            setTimeout(addLog, Math.random() * 1500 + 500); // Random delay between 0.5s and 2s
+        }
+    }
+    setTimeout(addLog, 2000); // Start after 2 seconds
+
+    // UI Sound for Execute Button
+    const dispatchBtn = document.getElementById('override-btn');
+    // Using the user-requested UI synth confirm sound url
+    const uiSound = new Audio('https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg'); 
+
+    if (dispatchBtn) {
+        dispatchBtn.addEventListener('click', function() {
+            uiSound.play(); 
+            this.classList.add('deployed');
+            this.innerHTML = "[ DISPATCHED. ETA: 2 HOURS ]";
+        });
     }
 
 }, 500); // Small delay ensures CDN scripts initialize first
