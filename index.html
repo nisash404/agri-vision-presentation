@@ -23,6 +23,15 @@ section {
 }
 section.active { opacity: 1; visibility: visible; z-index: 10; }
 
+/* Fake Terminal Boot Preloader */
+#preloader {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #050505;
+    z-index: 10000; display: flex; align-items: flex-start; justify-content: flex-start;
+    padding: 3rem; box-sizing: border-box; font-family: monospace; font-size: 1.2rem;
+    color: #00ff88; transition: opacity 0.8s ease; 
+}
+#preloader.fade-out { opacity: 0; pointer-events: none; }
+
 .buzzwords { color: #00ff88; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.5rem; font-weight: 500; }
 .pitch { font-size: 1.5rem; max-width: 800px; line-height: 1.6; color: #ccc; z-index: 10; }
 h1 { font-size: 4rem; margin-bottom: 0.5rem; text-shadow: 0 0 20px rgba(0,255,136,0.3); z-index: 10; }
@@ -110,6 +119,20 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 .sms-notification { position: absolute; top: 20px; right: -400px; background: #111; padding: 1.5rem; border-left: 4px solid #ff3333; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); transition: right 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 100; font-family: monospace; }
 .sms-notification.show { right: 10%; animation: sirenPulse 0.5s infinite alternate; border: 2px solid #ff3333; }
 @keyframes sirenPulse { 0% { box-shadow: 0 0 10px #ff3333, inset 0 0 10px rgba(255,51,51,0.2); background: #2a0000; } 100% { box-shadow: 0 0 40px #ff3333, inset 0 0 30px rgba(255,51,51,0.5); background: #4a0000; color: #fff; text-shadow: 0 0 5px #fff; } }
+
+/* S7 Fake Override Button */
+.execute-btn {
+    margin-top: 2rem; padding: 1rem 2rem; font-family: monospace; font-size: 1.2rem; font-weight: bold; cursor: pointer;
+    background: transparent; color: #ff3333; border: 2px solid #ff3333; border-radius: 4px;
+    box-shadow: 0 0 15px rgba(255,51,51,0.4), inset 0 0 15px rgba(255,51,51,0.2);
+    transition: all 0.3s; z-index: 20; position: relative;
+}
+.execute-btn:hover { background: rgba(255,51,51,0.1); box-shadow: 0 0 30px rgba(255,51,51,0.6), inset 0 0 20px rgba(255,51,51,0.4); }
+.execute-btn:active { transform: scale(0.95); }
+.execute-btn.deployed { 
+    color: #00ff88; border-color: #00ff88; box-shadow: 0 0 20px rgba(0,255,136,0.6), inset 0 0 20px rgba(0,255,136,0.2); 
+    background: rgba(0,255,136,0.1); pointer-events: none;
+}
 
 /* Global Progress Bar */
 #progress-bar {
@@ -328,6 +351,9 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 </style>
 </head>
 <body>
+<!-- Fake Terminal Preloader -->
+<div id="preloader"><span id="boot-text"></span></div>
+
 <div id="slide-transition"></div>
 <div id="progress-bar"></div>
 
@@ -497,7 +523,8 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
     <div class="automation-container">
         <div class="pulse-ring"></div>
     </div>
-    <div class="pitch">"Gram Panchayats don't have to look at the data. The data finds them. Our automated triggers send SMS alerts the second a threshold is breached."</div>
+    <button class="execute-btn" id="override-btn" onclick="deployTankers()">[ OVERRIDE: DEPLOY WATER TANKERS ]</button>
+    <div class="pitch" style="margin-top: 2rem;">"Gram Panchayats don't have to look at the data. The data finds them. Our automated triggers send SMS alerts the second a threshold is breached."</div>
 </section>
 
 <section id="s10">
@@ -602,8 +629,80 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 </section>
 
 <script>
+// Web Audio API Synth Sounds
+let audioCtx;
+function initAudio() {
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+function playBeep(type) {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    if (type === 'slider') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+        gainNode.gain.setValueAtTime(0.01, audioCtx.currentTime); // very low volume
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+    } else if (type === 'alert') {
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(600, audioCtx.currentTime + 0.1);
+        gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+    } else if (type === 'radar') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(300, audioCtx.currentTime + 1.5);
+        gainNode.gain.setValueAtTime(0.015, audioCtx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
+        osc.start(); osc.stop(audioCtx.currentTime + 1.5);
+    } else if (type === 'execute') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(1200, audioCtx.currentTime + 0.1);
+        gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+    }
+}
+
+function deployTankers() {
+    initAudio();
+    playBeep('execute');
+    const btn = document.getElementById('override-btn');
+    btn.textContent = "[ DISPATCHED. ETA: 2 HOURS ]";
+    btn.classList.add('deployed');
+}
+
 // Wait for external scripts to load
 setTimeout(() => {
+    // 0. Fake Terminal Preloader
+    new Typed('#boot-text', {
+        strings: [
+            '> ESTABLISHING SECURE CONNECTION TO SENTINEL-2...\n^500> BYPASSING ENCRYPTION PROTOCOLS...\n^500> DOWNLOADING REGIONAL TELEMETRY...\n^800> ACCESS GRANTED.'
+        ],
+        typeSpeed: 30,
+        showCursor: true,
+        cursorChar: '█',
+        onComplete: (self) => {
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('fade-out');
+                // Trigger initials
+                sections[0].classList.add('active');
+                triggerAnimations('s1');
+                initAudio(); // Initialize audio context on first interaction
+            }, 1000);
+        }
+    });
+
     // 1. Initializing Typed.js (Section 1)
     new Typed('#typed', {
         strings: ['> Initializing Geospatial Telemetry...'],
@@ -632,6 +731,7 @@ setTimeout(() => {
 
     if (sliderInput) {
         sliderInput.addEventListener('input', (e) => {
+            initAudio(); playBeep('slider');
             const val = e.target.value;
             heatLayer.style.clipPath = `inset(0 ${100 - val}% 0 0)`;
             sliderLine.style.left = `${val}%`;
@@ -711,7 +811,10 @@ setTimeout(() => {
 
         // S7: SMS Alert
         if(sectionId === 's7') {
-            setTimeout(() => document.getElementById('sms').classList.add('show'), 1500);
+            setTimeout(() => {
+                document.getElementById('sms').classList.add('show');
+                initAudio(); playBeep('alert');
+            }, 1500);
         }
 
         // S8: SDG Flip Cards Reveal
@@ -738,6 +841,8 @@ setTimeout(() => {
             const coordDisplay = document.getElementById('coord-display');
             if(coordDisplay && !coordDisplay.dataset.active) {
                 coordDisplay.dataset.active = "true";
+                initAudio(); playBeep('radar');
+                
                 let baseLat = 17.1231;
                 let baseLon = 79.2088;
                 let baseTemp = 42.5;
@@ -768,12 +873,9 @@ setTimeout(() => {
         }
     }
 
-    // Initialize first slide
-    sections[0].classList.add('active');
-    triggerAnimations('s1');
-
     // Keyboard Navigation
     document.addEventListener('keydown', (e) => {
+        initAudio(); // ensure audio can play after key press
         if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
             goToSlide(currentSlide + 1);
         } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
@@ -784,7 +886,10 @@ setTimeout(() => {
     // Mouse Wheel Scrolling
     let canScroll = true;
     document.addEventListener('wheel', (e) => {
-        if (!canScroll) return;
+        if (!canScroll || document.getElementById('preloader').style.opacity === "0") return; // Allow scroll if preloader is gone, but we check fade-out class usually. 
+        if(!document.getElementById('preloader').classList.contains('fade-out')) return; // block scroll during preloader
+        initAudio(); // ensure audio can play after scroll
+        
         canScroll = false;
         
         if (e.deltaY > 0) {
