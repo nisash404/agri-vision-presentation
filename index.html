@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agri-Vision</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <style>
+/* Global Styles */
+body { margin: 0; background: #050505; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+section { min-height: 100vh; padding: 4rem 10%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-bottom: 1px solid #1a1a1a; position: relative; overflow: hidden; }
+
+.buzzwords { color: #00ff88; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.5rem; font-weight: 500; }
+.pitch { font-size: 1.5rem; max-width: 800px; line-height: 1.6; color: #ccc; z-index: 10; }
+h1 { font-size: 4rem; margin-bottom: 0.5rem; text-shadow: 0 0 20px rgba(0,255,136,0.3); z-index: 10; }
+h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
+
+/* S1: Hero */
+#vanta-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+
+/* S2: Problem */
+.stats-grid { display: flex; gap: 4rem; margin: 3rem 0; z-index: 10; flex-wrap: wrap; justify-content: center; }
+.stat-box h3 { font-size: 4.5rem; margin: 0; color: #ff3333; text-shadow: 0 0 15px rgba(255,51,51,0.4); }
+.stat-box p { font-size: 1.2rem; color: #888; }
+
+/* S3: Paradigm Shift (Slider) */
+.slider-container { position: relative; width: 80%; max-width: 800px; height: 400px; margin: 3rem 0; background: #111; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+.slider-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+.img-before { background: linear-gradient(45deg, #1a4a20, #2c7a35); }
+.img-after { background: radial-gradient(circle, #ff0000 0%, #ff8800 40%, #1a4a20 80%); clip-path: inset(0 50% 0 0); }
+.slider-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; z-index: 20; }
+.slider-line { position: absolute; top: 0; bottom: 0; left: 50%; width: 4px; background: #fff; z-index: 15; pointer-events: none; transform: translateX(-50%); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+
+/* S4: Core Tech (SVG) */
+.svg-container { margin: 3rem 0; height: 300px; width: 100%; }
+.beam-down { stroke-dasharray: 100; stroke-dashoffset: 100; animation: shootDown 2s infinite; }
+.beam-up { stroke-dasharray: 100; stroke-dashoffset: 100; animation: bounceUp 2s infinite 1s; }
+@keyframes shootDown { to { stroke-dashoffset: 0; } }
+@keyframes bounceUp { to { stroke-dashoffset: 0; } }
+
+/* S5: Data Engine (Logos) */
+.logo-container { display: flex; gap: 3rem; margin: 3rem 0; overflow: hidden; width: 100%; justify-content: center; }
+.logo { width: 120px; height: 120px; background: #1a1a1a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 1px solid #333; opacity: 0; transition: all 1s ease-out; }
+.logo.slide-in-left { transform: translateX(-200px); }
+.logo.slide-in-right { transform: translateX(200px); }
+.logo.visible { transform: translateX(0); opacity: 1; }
+
+/* S6: Product (Tilt) */
+.dashboard-mockup { background: #111; border: 1px solid #333; border-radius: 15px; width: 80%; max-width: 900px; height: 450px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); margin: 3rem 0; display: flex; flex-direction: column; }
+.dash-header { height: 40px; border-bottom: 1px solid #333; display: flex; align-items: center; padding: 0 1rem; color: #555; font-size: 0.8rem; }
+.dash-body { flex: 1; display: flex; padding: 1rem; gap: 1rem; }
+.dash-map { flex: 2; background: #1a1a1a; border-radius: 8px; border: 1px solid rgba(255,0,0,0.3); position: relative; }
+.dash-sidebar { flex: 1; display: flex; flex-direction: column; gap: 1rem; }
+.dash-graph { flex: 1; background: #1a1a1a; border-radius: 8px; }
+
+/* S7: Automation */
+.automation-container { position: relative; height: 300px; width: 100%; display: flex; justify-content: center; align-items: center; }
+.pulse-ring { width: 150px; height: 150px; background: rgba(255,51,51,0.2); border: 2px solid #ff3333; border-radius: 50%; animation: pulse 2s infinite cubic-bezier(0.215, 0.61, 0.355, 1); }
+@keyframes pulse { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
+.sms-notification { position: absolute; top: 20px; right: -400px; background: #111; padding: 1.5rem; border-left: 4px solid #ff3333; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); transition: right 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 100; font-family: monospace; }
+.sms-notification.show { right: 10%; }
+
+/* S8: Societal Impact */
+.sdg-grid { display: flex; gap: 2rem; margin: 3rem 0; }
+.sdg-icon { width: 150px; height: 150px; background: #1a1a1a; border: 1px solid #333; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold; opacity: 0; transform: scale(0.5); transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+.sdg-icon.bounce { opacity: 1; transform: scale(1); }
+
+/* S9: Roadmap */
+.timeline { position: relative; max-width: 600px; margin: 3rem auto; padding: 2rem 0; }
+.timeline::before { content: ''; position: absolute; top: 0; left: 50%; width: 2px; height: 0; background: #00ff88; transition: height 1.5s ease; }
+.timeline.draw-line::before { height: 100%; }
+.milestone { position: relative; margin: 2rem 0; width: 50%; padding: 0 2rem; opacity: 0; transition: opacity 0.5s ease 0.5s; box-sizing: border-box; }
+.milestone:nth-child(odd) { left: 0; text-align: right; }
+.milestone:nth-child(even) { left: 50%; text-align: left; }
+.timeline.draw-line .milestone { opacity: 1; }
+.dot { position: absolute; top: 5px; width: 16px; height: 16px; background: #00ff88; border-radius: 50%; box-shadow: 0 0 10px #00ff88; transform: scale(0); transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+.milestone:nth-child(odd) .dot { right: -9px; }
+.milestone:nth-child(even) .dot { left: -9px; }
+.timeline.draw-line .milestone .dot { transform: scale(1); }
+
+/* S10: The Nuke (Upgraded) */
+#s10 { background: #000; border: none; }
+.map-container { 
+    width: 90%; max-width: 1200px; height: 60vh; 
+    background: #050505; border-radius: 15px; border: 1px solid #333; 
+    margin-top: 3rem; position: relative; overflow: hidden; 
+    display: flex; align-items: center; justify-content: center; color: #333;
+    box-shadow: 0 0 50px rgba(0,0,0,0.8) inset;
+}
+
+/* High-contrast satellite map placeholder (Dark Matter style) */
+.map-bg {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    /* Using a dark satellite texture proxy for the presentation */
+    background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop') center/cover;
+    opacity: 0.4;
+    filter: grayscale(80%) contrast(150%) brightness(0.6);
+}
+
+/* CRT Scanline & Vignette Effect */
+.map-scanlines {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 4px, 6px 100%;
+    z-index: 5;
+    pointer-events: none;
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
+}
+
+/* Multi-part Radar System */
+.radar-system {
+    position: absolute;
+    width: 400px; height: 400px;
+    z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+}
+
+/* Pulsing Center Target */
+.radar-center {
+    position: absolute; width: 12px; height: 12px;
+    background: #ff3333; border-radius: 50%;
+    box-shadow: 0 0 15px #ff3333;
+    z-index: 12;
+    animation: targetPulse 1.5s infinite;
+}
+@keyframes targetPulse {
+    0% { transform: scale(1); opacity: 1; box-shadow: 0 0 15px #ff3333; }
+    50% { transform: scale(1.5); opacity: 0.8; box-shadow: 0 0 30px #ff3333, 0 0 10px #fff; }
+    100% { transform: scale(1); opacity: 1; box-shadow: 0 0 15px #ff3333; }
+}
+
+/* Rotating Outer Scanner Rings */
+.radar-ring {
+    position: absolute; width: 100%; height: 100%;
+    border: 1px solid rgba(255, 51, 51, 0.3);
+    border-radius: 50%;
+    background: repeating-radial-gradient(transparent 0, transparent 48px, rgba(255, 51, 51, 0.2) 49px, transparent 50px);
+}
+.radar-ring::before, .radar-ring::after {
+    content: ''; position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
+    border-radius: 50%;
+    border: 2px dashed rgba(255, 51, 51, 0.5);
+    animation: radarSpin 20s linear infinite;
+}
+.radar-ring::after { border: 1px dotted rgba(255, 255, 255, 0.3); animation: radarSpinReverse 30s linear infinite; }
+
+/* Sweeping Radar Beam */
+.radar-sweep {
+    position: absolute; width: 50%; height: 50%;
+    top: 50%; left: 50%;
+    transform-origin: 0 0;
+    background: conic-gradient(from 0deg, transparent 70%, rgba(255, 51, 51, 0.4) 100%);
+    animation: radarSweep 4s linear infinite;
+    border-radius: 0 100% 0 0;
+}
+
+@keyframes radarSpin { 100% { transform: rotate(360deg); } }
+@keyframes radarSpinReverse { 100% { transform: rotate(-360deg); } }
+@keyframes radarSweep { 100% { transform: rotate(360deg); } }
+
+/* Dynamic Telemetry Readout */
+.telemetry-data {
+    position: absolute; top: 10%; right: -30%;
+    background: rgba(10, 10, 10, 0.85);
+    border: 1px solid #ff3333;
+    padding: 15px; border-radius: 4px;
+    font-family: monospace; font-size: 0.85rem; color: #00ff88;
+    text-align: left; line-height: 1.6;
+    box-shadow: 0 0 20px rgba(255,51,51,0.2);
+    backdrop-filter: blur(4px);
+}
+.telemetry-data::before {
+    content: ''; position: absolute; top: 50%; left: -50px;
+    width: 50px; height: 1px; background: #ff3333;
+}
+
+
+</style>
+</head>
+<body>
+
+<section id="s1">
+    <div id="vanta-canvas"></div>
+    <h2 style="font-family: monospace; color: #00ff88; z-index: 10;"><span id="typed"></span></h2>
+    <h1>AGRI-VISION</h1>
+    <div class="buzzwords">Hyper-Local • Predictive Intelligence • Earth Observation</div>
+    <div class="pitch">"Welcome to Agri-Vision. We are moving agriculture from the ground to the cloud."</div>
+</section>
+
+<section id="s2">
+    <div class="buzzwords">Systemic Latency • Generational Debt Traps • Reactive Paradigm</div>
+    <h2 class="section-title">The Flawed Reality</h2>
+    <div class="stats-grid">
+        <div class="stat-box"><h3 class="counter" data-target="300000">0</h3><p>Agrarian Tragedies</p></div>
+        <div class="stat-box"><h3 class="counter" data-target="14">0</h3><p>Days Detection Lag</p></div>
+        <div class="stat-box"><h3><span class="counter" data-target="100">0</span>%</h3><p>Reactive Post-Mortem</p></div>
+    </div>
+    <div class="pitch">"The current agricultural aid system is a post-mortem. We only react when the crop is already dead. That latency is what kills farmers."</div>
+</section>
+
+<section id="s3">
+    <div class="buzzwords">Invisible Spectrum Analysis • Pre-Emptive Diagnostics</div>
+    <h2 class="section-title">The Paradigm Shift</h2>
+    <div class="slider-container">
+        <div class="slider-img img-before"></div>
+        <div class="slider-img img-after" id="heat-layer"></div>
+        <div class="slider-line" id="slider-line"></div>
+        <input type="range" min="0" max="100" value="50" class="slider-input" id="slider-input">
+    </div>
+    <div class="pitch">"We are shifting from observation to prevention. We detect moisture stress at the cellular level, two weeks before the human eye can see a single yellow leaf."</div>
+</section>
+
+<section id="s4">
+    <div class="buzzwords">Multispectral Signatures • NDVI Algorithms • Near-Infrared Reflectance</div>
+    <h2 class="section-title">The Core Technology</h2>
+    <div class="svg-container">
+        <svg width="100%" height="100%" viewBox="0 0 400 300">
+            <rect x="180" y="20" width="40" height="20" fill="#00ff88" />
+            <rect x="140" y="25" width="30" height="10" fill="#555" />
+            <rect x="230" y="25" width="30" height="10" fill="#555" />
+            <path d="M200 280 Q180 230 200 200 Q220 230 200 280" fill="#2c7a35" />
+            <line x1="200" y1="50" x2="200" y2="190" stroke="#00ff88" stroke-width="4" class="beam-down" />
+            <line x1="210" y1="190" x2="280" y2="50" stroke="#ff3333" stroke-width="4" class="beam-up" />
+        </svg>
+    </div>
+    <div class="pitch">"Using the Normalized Difference Vegetation Index, we analyze the infrared radiation bouncing off crops. Healthy plants reflect it; dying plants absorb it. It’s an X-ray for agriculture."</div>
+</section>
+
+<section id="s5">
+    <div class="buzzwords">Petabyte-Scale Processing • Cloud-Native • Open-Source Constellations</div>
+    <h2 class="section-title">The Data Engine</h2>
+    <div class="logo-container" id="logo-trigger">
+        <div class="logo slide-in-left">ESA</div>
+        <div class="logo slide-in-left">Sentinel-2</div>
+        <div class="logo slide-in-right">Python</div>
+        <div class="logo slide-in-right">Earth Engine</div>
+    </div>
+    <div class="pitch">"We don't rely on expensive ground sensors. We hijack petabytes of free data from the Sentinel-2 satellite constellation, processing it via Google's infrastructure."</div>
+</section>
+
+<section id="s6">
+    <div class="buzzwords">Actionable Insights • Decision Support System (DSS)</div>
+    <h2 class="section-title">Sentinel Dashboard</h2>
+    <div class="dashboard-mockup" data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.2">
+        <div class="dash-header">Dashboard / Region Analysis / Status: CRITICAL</div>
+        <div class="dash-body">
+            <div class="dash-sidebar">
+                <div class="dash-graph" style="background: rgba(255,51,51,0.2); border: 1px solid #ff3333; display:flex; align-items:center; justify-content:center; color:#ff3333; font-weight:bold; text-align: center; padding: 10px;">MOISTURE DROP DETECTED</div>
+                <div class="dash-graph"></div>
+            </div>
+            <div class="dash-map">
+                <div style="position:absolute; top:40%; left:40%; width:50px; height:50px; background:radial-gradient(circle, #ff0000, transparent); border-radius:50%;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="pitch">"All this complex math is distilled into a zero-learning-curve dashboard for local authorities. Red means danger. Green means safe."</div>
+</section>
+
+<section id="s7">
+    <div class="sms-notification" id="sms">ALERT: 40% Moisture Drop in Nallamala Sector.<br><br>Action: Deploy Irrigation.</div>
+    <div class="buzzwords">Automated Telemetry • Trigger-Based Actuation</div>
+    <h2 class="section-title">The Alert System</h2>
+    <div class="automation-container">
+        <div class="pulse-ring"></div>
+    </div>
+    <div class="pitch">"Gram Panchayats don't have to look at the data. The data finds them. Our automated triggers send SMS alerts the second a threshold is breached."</div>
+</section>
+
+<section id="s8">
+    <div class="buzzwords">Democratizing Space Tech • Corruption-Free Auditing • Grassroots Resilience</div>
+    <h2 class="section-title">Societal Impact</h2>
+    <div class="sdg-grid" id="sdg-trigger">
+        <div class="sdg-icon" style="background: #e5243b; color: white; text-align:center;">1 <br> No Poverty</div>
+        <div class="sdg-icon" style="background: #dda63a; color: white; text-align:center;">2 <br> Zero Hunger</div>
+    </div>
+    <div class="pitch">"This isn't just about saving plants; it's about removing the middleman. Satellite data cannot be bribed. It ensures targeted, corruption-free relief directly to the most vulnerable."</div>
+</section>
+
+<section id="s9">
+    <div class="buzzwords">Agile Deployment • Iterative Prototyping</div>
+    <h2 class="section-title">The Roadmap</h2>
+    <div class="timeline" id="timeline-trigger">
+        <div class="milestone"><div class="dot"></div><strong>Phase 1</strong><br>Architecture & Data Sourcing (Current)</div>
+        <div class="milestone"><div class="dot"></div><strong>Phase 2</strong><br>Algorithmic Processing & Streamlit</div>
+        <div class="milestone"><div class="dot"></div><strong>Phase 3</strong><br>Ground-Truth Validation & Deployment</div>
+    </div>
+    <div class="pitch">"We are currently in Phase 1, ingesting the API data. By Phase 3, we will have a live, interactive map."</div>
+</section>
+
+<section id="s10">
+    <div class="buzzwords" style="color:#ff3333;">Live Telemetry Feed</div>
+    <h2 class="section-title" style="margin-bottom: 0;">System Online.</h2>
+    <div class="map-container">
+        <!-- High-contrast dark satellite map -->
+        <div class="map-bg"></div>
+        <!-- CRT Scanline Overlay -->
+        <div class="map-scanlines"></div>
+        
+        <!-- Multi-part Radar System -->
+        <div class="radar-system">
+            <!-- Pulsing Center Target -->
+            <div class="radar-center"></div>
+            <!-- Rotating Scanner Ring -->
+            <div class="radar-ring"></div>
+            <!-- Sweeping Scanner Beam -->
+            <div class="radar-sweep"></div>
+            
+            <!-- Dynamic Coordinate Text -->
+            <div class="telemetry-data" id="coord-display">
+                LAT: 16.5061° N<br>
+                LON: 80.6480° E<br>
+                ALT: 450.2m<br>
+                NDVI: <span style="color:#ff3333">0.12 (CRITICAL)</span>
+            </div>
+        </div>
+        
+        <div style="z-index: 10; font-family: monospace; color: #ff3333; position: absolute; bottom: 20px;">[ SATELLITE UPLINK SECURED ]</div>
+    </div>
+    <div class="pitch" style="margin-top: 2rem;">"We don't just have concepts; we have code. Here is a live, raw feed of the map interface we are building for our next presentation. Thank you."</div>
+</section>
+
+<script>
+// Wait for external scripts to load
+setTimeout(() => {
+    // 1. Initializing Typed.js (Section 1)
+    new Typed('#typed', {
+        strings: ['> Initializing Geospatial Telemetry...'],
+        typeSpeed: 50,
+        showCursor: false
+    });
+
+    // 2. Vanta.js Background (Section 1)
+    VANTA.NET({
+        el: "#vanta-canvas",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.00,
+        scaleMobile: 1.00,
+        color: 0x00ff88,
+        backgroundColor: 0x050505
+    });
+
+    // 3. Image Slider Logic (Section 3)
+    const sliderInput = document.getElementById('slider-input');
+    const heatLayer = document.getElementById('heat-layer');
+    const sliderLine = document.getElementById('slider-line');
+
+    if (sliderInput) {
+        sliderInput.addEventListener('input', (e) => {
+            const val = e.target.value;
+            heatLayer.style.clipPath = `inset(0 ${100 - val}% 0 0)`;
+            sliderLine.style.left = `${val}%`;
+        });
+    }
+
+    // 4. Scroll Triggers (Intersection Observer for Animations)
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                
+                // S2: Counter Animation
+                if(entry.target.id === 's2') {
+                    const counters = document.querySelectorAll('.counter');
+                    counters.forEach(counter => {
+                        const target = +counter.getAttribute('data-target');
+                        const updateCount = () => {
+                            const count = +counter.innerText;
+                            const inc = Math.ceil(target / 80);
+                            if (count < target) {
+                                counter.innerText = count + inc;
+                                setTimeout(updateCount, 20);
+                            } else {
+                                counter.innerText = target.toLocaleString();
+                            }
+                        };
+                        if (counter.innerText == '0') updateCount();
+                    });
+                }
+
+                // S5: Logos Slide In
+                if(entry.target.id === 's5') {
+                    document.querySelectorAll('.logo').forEach((el, index) => {
+                        setTimeout(() => el.classList.add('visible'), index * 200);
+                    });
+                }
+
+                // S7: SMS Alert
+                if(entry.target.id === 's7') {
+                    setTimeout(() => document.getElementById('sms').classList.add('show'), 1500);
+                }
+
+                // S8: SDG Icons Bounce
+                if(entry.target.id === 's8') {
+                    document.querySelectorAll('.sdg-icon').forEach((el, index) => {
+                        setTimeout(() => el.classList.add('bounce'), index * 300);
+                    });
+                }
+
+                // S9: Timeline Draw
+                if(entry.target.id === 's9') {
+                    document.getElementById('timeline-trigger').classList.add('draw-line');
+                }
+
+                // S10: Live Telemetry Update Simulation
+                if(entry.target.id === 's10') {
+                    const coordDisplay = document.getElementById('coord-display');
+                    if(coordDisplay && !coordDisplay.dataset.active) {
+                        coordDisplay.dataset.active = "true";
+                        let baseLat = 16.5061;
+                        let baseLon = 80.6480;
+                        let baseNdvi = 0.12;
+                        
+                        setInterval(() => {
+                            // Jitter the coordinates slightly to simulate live tracking
+                            const lat = (baseLat + (Math.random() * 0.0004 - 0.0002)).toFixed(4);
+                            const lon = (baseLon + (Math.random() * 0.0004 - 0.0002)).toFixed(4);
+                            const alt = (450.2 + (Math.random() * 2 - 1)).toFixed(1);
+                            const ndvi = (baseNdvi + (Math.random() * 0.02 - 0.01)).toFixed(2);
+                            
+                            coordDisplay.innerHTML = `
+                                LAT: ${lat}° N<br>
+                                LON: ${lon}° E<br>
+                                ALT: ${alt}m<br>
+                                NDVI: <span style="color:#ff3333">${ndvi} (CRITICAL)</span>
+                            `;
+                        }, 2000); // Update every 2 seconds
+                    }
+                }
+            }
+        });
+    }, { threshold: 0.4 });
+
+    document.querySelectorAll('section').forEach(section => observer.observe(section));
+}, 500); // Small delay ensures CDN scripts initialize first
+</script>
+</body>
+</html>
