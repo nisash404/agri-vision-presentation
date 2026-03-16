@@ -11,8 +11,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
     <style>
 /* Global Styles */
-body { margin: 0; background: #050505; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-section { min-height: 100vh; padding: 4rem 10%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-bottom: 1px solid #1a1a1a; position: relative; overflow: hidden; }
+body { margin: 0; background: #050505; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
+section { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100vh;
+    padding: 0 10%; box-sizing: border-box;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+    opacity: 0; visibility: hidden; transition: opacity 0.5s ease, visibility 0.5s ease;
+    z-index: 1;
+}
+section.active { opacity: 1; visibility: visible; z-index: 10; }
 
 .buzzwords { color: #00ff88; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.5rem; font-weight: 500; }
 .pitch { font-size: 1.5rem; max-width: 800px; line-height: 1.6; color: #ccc; z-index: 10; }
@@ -360,84 +367,112 @@ setTimeout(() => {
         });
     }
 
-    // 4. Scroll Triggers (Intersection Observer for Animations)
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                
-                // S2: Counter Animation
-                if(entry.target.id === 's2') {
-                    const counters = document.querySelectorAll('.counter');
-                    counters.forEach(counter => {
-                        const target = +counter.getAttribute('data-target');
-                        const updateCount = () => {
-                            const count = +counter.innerText;
-                            const inc = Math.ceil(target / 80);
-                            if (count < target) {
-                                counter.innerText = count + inc;
-                                setTimeout(updateCount, 20);
-                            } else {
-                                counter.innerText = target.toLocaleString();
-                            }
-                        };
-                        if (counter.innerText == '0') updateCount();
-                    });
-                }
+    // 4. Slide Navigation and Animation Triggers
+    const sections = document.querySelectorAll('section');
+    let currentSlide = 0;
 
-                // S5: Logos Slide In
-                if(entry.target.id === 's5') {
-                    document.querySelectorAll('.logo').forEach((el, index) => {
-                        setTimeout(() => el.classList.add('visible'), index * 200);
-                    });
-                }
+    function goToSlide(index) {
+        if (index < 0 || index >= sections.length) return;
+        
+        // Remove active class from current
+        sections[currentSlide].classList.remove('active');
+        
+        // Update current slide
+        currentSlide = index;
+        const targetSection = sections[currentSlide];
+        
+        // Add active class to new slide
+        targetSection.classList.add('active');
+        
+        // Trigger animations for the new active slide
+        triggerAnimations(targetSection.id);
+    }
 
-                // S7: SMS Alert
-                if(entry.target.id === 's7') {
-                    setTimeout(() => document.getElementById('sms').classList.add('show'), 1500);
-                }
-
-                // S8: SDG Icons Bounce
-                if(entry.target.id === 's8') {
-                    document.querySelectorAll('.sdg-icon').forEach((el, index) => {
-                        setTimeout(() => el.classList.add('bounce'), index * 300);
-                    });
-                }
-
-                // S9: Timeline Draw
-                if(entry.target.id === 's9') {
-                    document.getElementById('timeline-trigger').classList.add('draw-line');
-                }
-
-                // S10: Live Telemetry Update Simulation
-                if(entry.target.id === 's10') {
-                    const coordDisplay = document.getElementById('coord-display');
-                    if(coordDisplay && !coordDisplay.dataset.active) {
-                        coordDisplay.dataset.active = "true";
-                        let baseLat = 16.5061;
-                        let baseLon = 80.6480;
-                        let baseNdvi = 0.12;
-                        
-                        setInterval(() => {
-                            // Jitter the coordinates slightly to simulate live tracking
-                            const lat = (baseLat + (Math.random() * 0.0004 - 0.0002)).toFixed(4);
-                            const lon = (baseLon + (Math.random() * 0.0004 - 0.0002)).toFixed(4);
-                            const alt = (450.2 + (Math.random() * 2 - 1)).toFixed(1);
-                            const ndvi = (baseNdvi + (Math.random() * 0.02 - 0.01)).toFixed(2);
-                            
-                            coordDisplay.innerHTML = `
-                                LAT: ${lat}° N<br>
-                                LON: ${lon}° E<br>
-                                ALT: ${alt}m<br>
-                                NDVI: <span style="color:#ff3333">${ndvi} (CRITICAL)</span>
-                            `;
-                        }, 2000); // Update every 2 seconds
+    function triggerAnimations(sectionId) {
+        // S2: Counter Animation
+        if(sectionId === 's2') {
+            const counters = document.querySelectorAll('#s2 .counter');
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                if (counter.innerText != '0') return; // Only animate once
+                const updateCount = () => {
+                    const count = +counter.innerText;
+                    const inc = Math.ceil(target / 80);
+                    if (count < target) {
+                        counter.innerText = count + inc;
+                        setTimeout(updateCount, 20);
+                    } else {
+                        counter.innerText = target.toLocaleString();
                     }
-                }
-            }
-        });
-    }, { threshold: 0.4 });
+                };
+                updateCount();
+            });
+        }
 
-    document.querySelectorAll('section').forEach(section => observer.observe(section));
+        // S5: Logos Slide In
+        if(sectionId === 's5') {
+            document.querySelectorAll('#s5 .logo').forEach((el, index) => {
+                setTimeout(() => el.classList.add('visible'), index * 200);
+            });
+        }
+
+        // S7: SMS Alert
+        if(sectionId === 's7') {
+            setTimeout(() => document.getElementById('sms').classList.add('show'), 1500);
+        }
+
+        // S8: SDG Icons Bounce
+        if(sectionId === 's8') {
+            document.querySelectorAll('#s8 .sdg-icon').forEach((el, index) => {
+                setTimeout(() => el.classList.add('bounce'), index * 300);
+            });
+        }
+
+        // S9: Timeline Draw
+        if(sectionId === 's9') {
+            document.getElementById('timeline-trigger').classList.add('draw-line');
+        }
+
+        // S10: Live Telemetry Update Simulation
+        if(sectionId === 's10') {
+            const coordDisplay = document.getElementById('coord-display');
+            if(coordDisplay && !coordDisplay.dataset.active) {
+                coordDisplay.dataset.active = "true";
+                let baseLat = 16.5061;
+                let baseLon = 80.6480;
+                let baseNdvi = 0.12;
+                
+                setInterval(() => {
+                    // Jitter the coordinates slightly to simulate live tracking
+                    const lat = (baseLat + (Math.random() * 0.0004 - 0.0002)).toFixed(4);
+                    const lon = (baseLon + (Math.random() * 0.0004 - 0.0002)).toFixed(4);
+                    const alt = (450.2 + (Math.random() * 2 - 1)).toFixed(1);
+                    const ndvi = (baseNdvi + (Math.random() * 0.02 - 0.01)).toFixed(2);
+                    
+                    coordDisplay.innerHTML = `
+                        LAT: ${lat}° N<br>
+                        LON: ${lon}° E<br>
+                        ALT: ${alt}m<br>
+                        NDVI: <span style="color:#ff3333">${ndvi} (CRITICAL)</span>
+                    `;
+                }, 2000); // Update every 2 seconds
+            }
+        }
+    }
+
+    // Initialize first slide
+    sections[0].classList.add('active');
+    triggerAnimations('s1');
+
+    // Keyboard Navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+            goToSlide(currentSlide + 1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+            goToSlide(currentSlide - 1);
+        }
+    });
+
 }, 500); // Small delay ensures CDN scripts initialize first
 </script>
 </body>
