@@ -143,27 +143,53 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 .milestone:nth-child(even) .dot { left: -10px; }
 .timeline.draw-line .milestone .dot { transform: scale(1); }
 
-/* S11: Tech Stack */
-.tech-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; width: 80%; max-width: 1000px; margin-top: 2rem; }
-.tech-category { background: rgba(15, 15, 15, 0.8); border: 1px solid #333; border-radius: 12px; padding: 2rem; text-align: left; transition: transform 0.3s; }
-.tech-category:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+/* S11: Tech Stack (Premium Glassmorphism) */
+.tech-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 3rem; width: 80%; max-width: 1100px; margin-top: 2rem; perspective: 1000px; }
+.tech-category { 
+    background: linear-gradient(135deg, rgba(30,30,30,0.8) 0%, rgba(10,10,10,0.9) 100%); 
+    border: 1px solid rgba(255,255,255,0.1); 
+    border-radius: 20px; padding: 2.5rem; text-align: left; 
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    position: relative; overflow: hidden;
+}
+.tech-category::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: currentColor; }
+.tech-category:hover { transform: translateY(-10px) rotateX(5deg) rotateY(-5deg); box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.1); }
 .tech-category h3 { font-size: 1.5rem; margin-top: 0; margin-bottom: 1.5rem; letter-spacing: 2px; }
-.tech-category ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 1rem; }
-.tech-category li { background: #111; padding: 0.5rem 1rem; border-radius: 6px; font-family: monospace; font-size: 0.9rem; border: 1px solid #222; transition: all 0.3s; }
+.tech-category ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 1rem; position: relative; z-index: 2; }
+.tech-category li { background: rgba(0,0,0,0.5); padding: 0.6rem 1.2rem; border-radius: 8px; font-family: monospace; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s; color: #eee; }
 
-/* Category specific colors */
-.tech-frontend { border-top: 3px solid #00ff88; }
-.tech-frontend li:hover { border-color: #00ff88; color: #00ff88; box-shadow: 0 0 10px rgba(0,255,136,0.3); }
-.tech-backend { border-top: 3px solid #00ccff; }
-.tech-backend li:hover { border-color: #00ccff; color: #00ccff; box-shadow: 0 0 10px rgba(0,204,255,0.3); }
-.tech-stats { border-top: 3px solid #ff3333; }
-.tech-stats li:hover { border-color: #ff3333; color: #ff3333; box-shadow: 0 0 10px rgba(255,51,51,0.3); }
-.tech-apis { border-top: 3px solid #ffd700; }
-.tech-apis li:hover { border-color: #ffd700; color: #ffd700; box-shadow: 0 0 10px rgba(255,215,0,0.3); }
+/* Category specific colors (Glassmorphism Accents) */
+.tech-frontend { color: #00ff88; }
+.tech-frontend::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0,255,136,0.1) 0%, transparent 60%); pointer-events: none; z-index: 1; }
+.tech-frontend li:hover { border-color: #00ff88; background: rgba(0,255,136,0.1); box-shadow: 0 0 15px rgba(0,255,136,0.3); transform: translateY(-3px); }
+
+.tech-backend { color: #00ccff; }
+.tech-backend::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0,204,255,0.1) 0%, transparent 60%); pointer-events: none; z-index: 1; }
+.tech-backend li:hover { border-color: #00ccff; background: rgba(0,204,255,0.1); box-shadow: 0 0 15px rgba(0,204,255,0.3); transform: translateY(-3px); }
+
+.tech-stats { color: #ff3333; }
+.tech-stats::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,51,51,0.1) 0%, transparent 60%); pointer-events: none; z-index: 1; }
+.tech-stats li:hover { border-color: #ff3333; background: rgba(255,51,51,0.1); box-shadow: 0 0 15px rgba(255,51,51,0.3); transform: translateY(-3px); }
+
+.tech-apis { color: #ffd700; }
+.tech-apis::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 60%); pointer-events: none; z-index: 1; }
+.tech-apis li:hover { border-color: #ffd700; background: rgba(255,215,0,0.1); box-shadow: 0 0 15px rgba(255,215,0,0.3); transform: translateY(-3px); }
 
 /* Tech Category Animations */
-.tech-category { opacity: 0; transform: scale(0.9); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.tech-category.pop-in { opacity: 1; transform: scale(1); }
+.tech-category { opacity: 0; transform: translateY(40px) scale(0.9); transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.tech-category.pop-in { opacity: 1; transform: translateY(0) scale(1); }
+
+/* Ambient Particles */
+#ambient-particles { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 2; overflow: hidden; }
+.particle { position: absolute; background: #00ff88; border-radius: 50%; opacity: 0; animation: floatParticle linear infinite; }
+@keyframes floatParticle {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 0.5; transform: translateY(90vh) scale(1); }
+    90% { opacity: 0.5; transform: translateY(10vh) scale(1); }
+    100% { transform: translateY(0vh) scale(0); opacity: 0; }
+}
 
 /* S12: The Nuke (Upgraded - Was S10) */
 #s12 { background: #000; border: none; }
@@ -291,9 +317,11 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
     <div><span class="status-dot"></span>SYS.OP: <span class="accent-green">NORMAL</span> // UPLINK: SECURE</div>
 </div>
 <div class="perpetual-footer">
-    <div>[ INVESTOR PREVIEW / CONFIDENTIAL ]</div>
+    <div></div>
     <div>TELEM_DAT: OP_ACTIVE // <span id="clock-display" class="accent-green">00:00:00</span></div>
 </div>
+
+<div id="ambient-particles"></div>
 
 <section id="s1" class="active">
     <div id="vanta-canvas"></div>
@@ -722,9 +750,40 @@ setTimeout(() => {
     if (clockDisplay) {
         setInterval(() => {
             const now = new Date();
-            // Format to HH:MM:SS
             clockDisplay.textContent = now.toTimeString().split(' ')[0];
         }, 1000);
+    }
+
+    // Ambient Particle Generator
+    const particleContainer = document.getElementById('ambient-particles');
+    for (let i = 0; i < 30; i++) {
+        createParticle();
+    }
+    
+    function createParticle() {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random properties
+        const size = Math.random() * 4 + 1; // 1px to 5px
+        const left = Math.random() * 100; // 0% to 100%
+        const duration = Math.random() * 10 + 10; // 10s to 20s
+        const delay = Math.random() * 20; // 0s to 20s
+        
+        // Apply properties
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${left}vw`;
+        particle.style.animationDuration = `${duration}s`;
+        particle.style.animationDelay = `-${delay}s`;
+        
+        // Randomize colors slightly between the brand palette
+        const colors = ['#00ff88', '#00ccff', '#ff3333'];
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        // Add random glow
+        particle.style.boxShadow = `0 0 ${size * 2}px ${particle.style.background}`;
+        
+        particleContainer.appendChild(particle);
     }
 
 }, 500); // Small delay ensures CDN scripts initialize first
