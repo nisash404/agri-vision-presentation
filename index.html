@@ -42,14 +42,12 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 .stat-box h3 { font-size: 4.5rem; margin: 0; color: #ff3333; text-shadow: 0 0 15px rgba(255,51,51,0.4); }
 .stat-box p { font-size: 1.2rem; color: #888; }
 
-/* S3: Paradigm Shift (Automated Scanner) */
+/* S3: Time-Travel Slider */
 .diagnostic-container { position: relative; width: 80%; max-width: 900px; height: 450px; margin: 3rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-.diag-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: opacity 0.5s ease; }
-.spectral-eye { opacity: 0; z-index: 2; clip-path: inset(0 100% 0 0); animation: scanReveal 6s infinite ease-in-out alternate; }
-.scanner-bar { position: absolute; top: 0; bottom: 0; left: 0%; width: 4px; background: #00ff88; z-index: 15; box-shadow: 0 0 20px #00ff88, 0 0 40px #00ff88; animation: scanBar 6s infinite ease-in-out alternate; }
-.diag-labels { position: absolute; bottom: 20px; width: 100%; display: flex; justify-content: space-between; padding: 0 30px; font-weight: bold; font-family: monospace; z-index: 20; box-sizing: border-box;}
-@keyframes scanReveal { 0%, 10% { opacity: 0; clip-path: inset(0 100% 0 0); } 15% { opacity: 1; } 90%, 100% { opacity: 1; clip-path: inset(0 0 0 0); } }
-@keyframes scanBar { 0%, 10% { left: 0%; opacity: 0; } 15% { opacity: 1; } 90%, 100% { left: 100%; opacity: 0; } }
+.diag-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.spectral-eye { z-index: 2; clip-path: inset(0 50% 0 0); }
+.scanner-bar { position: absolute; top: 0; bottom: 0; left: 50%; width: 4px; background: #fff; z-index: 15; box-shadow: 0 0 20px #fff; pointer-events: none; transform: translateX(-50%); }
+.diag-labels { position: absolute; bottom: 20px; width: 100%; display: flex; justify-content: space-between; padding: 0 30px; font-weight: bold; font-family: monospace; z-index: 20; box-sizing: border-box; pointer-events: none;}
 
 /* S4: Core Tech (Animated Beams) */
 .ndvi-tech-container { width: 100%; display: flex; flex-direction: column; align-items: center; margin: 3rem 0; gap: 2rem; }
@@ -249,8 +247,8 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
     <div id="vanta-canvas"></div>
     <h2 style="font-family: monospace; color: #00ff88; z-index: 10;"><span id="typed"></span></h2>
     <h1>AGRI-VISION</h1>
-    <div class="buzzwords">Hyper-Local • Predictive Intelligence • Earth Observation</div>
-    <div class="pitch">"Welcome to Agri-Vision. We are moving agriculture from the ground to the cloud."</div>
+    <div class="buzzwords">Disaster Prevention Tool • Early Warning System • Earth Observation</div>
+    <div class="pitch">"Welcome to Agri-Vision. We are moving agriculture from a reactive management system to a proactive Disaster Prevention Tool."</div>
 </section>
 
 <section id="s2">
@@ -261,34 +259,40 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
         <div class="stat-box"><h3 class="counter" data-target="14">0</h3><p>Days Detection Lag</p></div>
         <div class="stat-box"><h3><span class="counter" data-target="100">0</span>%</h3><p>Reactive Post-Mortem</p></div>
     </div>
-    <div class="pitch">"The current agricultural aid system is a post-mortem. We only react when the crop is already dead. That latency is what kills farmers."</div>
+    <div class="pitch">"Farmers only realize their crops are dying when they turn yellow or brown. By then, it's too late. This latency is what leads to ultimate financial ruin."</div>
 </section>
 
 <section id="s3">
-    <div class="buzzwords">Invisible Spectrum Analysis • Pre-Emptive Diagnostics</div>
-    <h2 class="section-title">The Paradigm Shift</h2>
-    <div class="diagnostic-container">
-        <!-- Visual Layer (What humans see) -->
-        <div class="diag-layer human-eye" style="background: url('https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=2070&auto=format&fit=crop') center/cover;"></div>
+    <div class="buzzwords">Time-Travel Slider • Visible vs Spectral</div>
+    <h2 class="section-title">The Time-Travel Slider</h2>
+    <div class="diagnostic-container" style="position: relative;">
+        <!-- Visual Layer (What humans see - Day 1) -->
+        <div class="diag-layer human-eye" style="background: url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=2070&auto=format&fit=crop') center/cover;"></div>
         
-        <!-- Spectral Layer (What Agri-Vision sees) -->
-        <div class="diag-layer spectral-eye" style="background: url('https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=2070&auto=format&fit=crop') center/cover; filter: hue-rotate(180deg) contrast(150%) saturate(200%);"></div>
+        <!-- Spectral Layer (What Agri-Vision sees - Day 30) -->
+        <div class="diag-layer spectral-eye" id="heat-layer" style="background: url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=2070&auto=format&fit=crop') center/cover; filter: hue-rotate(180deg) sepia(100%) saturate(300%) hue-rotate(-50deg); opacity: 1; clip-path: inset(0 50% 0 0); animation: none;"></div>
         
-        <!-- The Scanner Bar -->
-        <div class="scanner-bar"></div>
+        <!-- The Slider Bar -->
+        <div class="scanner-bar" id="slider-line" style="left: 50%; box-shadow: 0 0 10px #fff; background: #fff; animation: none;"></div>
+        
+        <input type="range" min="0" max="100" value="50" style="position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor: ew-resize; z-index: 30;" id="slider-input">
         
         <div class="diag-labels">
-            <span style="color: #fff; text-shadow: 0 0 10px #000;">HUMAN EYE: HEALTHY</span>
-            <span style="color: #ff3333; text-shadow: 0 0 10px #000;">AGRI-VISION: SEVERE STRESS DETECTED (T-14 DAYS)</span>
+            <span style="color: #00ff88; text-shadow: 0 0 10px #000; z-index: 20;">DAY 1: GREEN (HUMAN EYE)</span>
+            <span style="color: #ff3333; text-shadow: 0 0 10px #000; z-index: 20;">DAY 30: RED (NDVI STRESS)</span>
         </div>
     </div>
-    <div class="pitch">"We are shifting from observation to prevention. We detect moisture stress at the cellular level, two weeks before the human eye can see a single yellow leaf."</div>
+    <div class="pitch">"We detect moisture stress 2 weeks before the human eye can see it. Drag the slider to see the field change from Day 1 to Day 30, proving our system caught it early."</div>
 </section>
 
 <section id="s4">
-    <div class="buzzwords">Multispectral Signatures • NDVI Algorithms • Near-Infrared Reflectance</div>
-    <h2 class="section-title">The Core Technology</h2>
+    <div class="buzzwords">Normalized Difference Vegetation Index</div>
+    <h2 class="section-title">How It Works (The Logic)</h2>
     
+    <div style="font-family: monospace; font-size: 2.5rem; color: #00ff88; margin-bottom: 2rem; border: 1px solid #333; padding: 1rem 2rem; background: rgba(0,255,136,0.1); border-radius: 8px;">
+        NDVI = (NIR - RED) / (NIR + RED)
+    </div>
+
     <div class="ndvi-tech-container">
         <div class="satellite-source">
             <div class="sat-pulse"></div>
@@ -302,7 +306,7 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
                 <div class="beam incoming visible-light">VIS</div>
                 <div class="beam incoming near-ir">NIR</div>
                 <div class="beam outgoing nir-strong">HIGH REFLECT</div>
-                <div class="ndvi-score" style="color: #00ff88">NDVI: 0.85</div>
+                <div class="ndvi-score" style="color: #00ff88">Healthy = High Score (Green)</div>
             </div>
             
             <!-- Stressed Plant Box -->
@@ -311,12 +315,12 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
                 <div class="beam incoming visible-light">VIS</div>
                 <div class="beam incoming near-ir">NIR</div>
                 <div class="beam outgoing nir-weak" style="border-top: 2px dashed #ff3333; height: 30px;">LOW REFLECT</div>
-                <div class="ndvi-score" style="color: #ff3333">NDVI: 0.12</div>
+                <div class="ndvi-score" style="color: #ff3333">Stressed = Low Score (Red)</div>
             </div>
         </div>
     </div>
 
-    <div class="pitch">"Using the Normalized Difference Vegetation Index, we analyze the Near-Infrared (NIR) radiation bouncing off crops. Healthy plants strongly reflect it; dying plants absorb it. It’s an X-ray for agriculture."</div>
+    <div class="pitch">"We don't need complex AI. We use a standard scientific formula. Healthy plants reflect Infrared. Stressed plants absorb it. The result: A heatmap where Red = Danger Zone."</div>
 </section>
 
 <section id="s5">
@@ -350,7 +354,7 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 </section>
 
 <section id="s7">
-    <div class="sms-notification" id="sms">ALERT: 40% Moisture Drop in Nallamala Sector.<br><br>Action: Deploy Irrigation.</div>
+    <div class="sms-notification" id="sms">ALERT: CRITICAL RISK DETECTED in Sector 4.<br><br>Action: Recommend deploying water tankers.</div>
     <div class="buzzwords">Automated Telemetry • Trigger-Based Actuation</div>
     <h2 class="section-title">The Alert System</h2>
     <div class="automation-container">
@@ -406,52 +410,48 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 </section>
 
 <section id="s11">
-    <div class="buzzwords">Microservices • Serverless Architecture • Edge Rendering</div>
+    <div class="buzzwords">Simple & Flashy</div>
     <h2 class="section-title">The Tech Stack</h2>
     <div class="tech-grid" id="tech-trigger">
         <div class="tech-category tech-frontend">
             <h3 style="color: #00ff88">FRONTEND</h3>
             <ul>
-                <li>React.js</li>
-                <li>Tailwind CSS</li>
-                <li>Framer Motion</li>
-                <li>Three.js</li>
+                <li>Streamlit (Python)</li>
+                <li>HTML / CSS Integration</li>
             </ul>
+            <p style="font-size: 0.85rem; color: #888; font-family: monospace; margin-top: 1rem;">Turns data scripts into a website instantly.</p>
         </div>
         <div class="tech-category tech-backend">
-            <h3 style="color: #00ccff">BACKEND</h3>
+            <h3 style="color: #00ccff">DATA SOURCE</h3>
             <ul>
-                <li>Node.js</li>
-                <li>Express</li>
-                <li>PostgreSQL</li>
-                <li>Prisma ORM</li>
+                <li>Sentinel-2</li>
+                <li>Google Earth Engine</li>
             </ul>
+             <p style="font-size: 0.85rem; color: #888; font-family: monospace; margin-top: 1rem;">Free satellite images via Python libraries.</p>
         </div>
         <div class="tech-category tech-stats">
-            <h3 style="color: #ff3333">DATA & STATS</h3>
+            <h3 style="color: #ff3333">PROCESSING</h3>
             <ul>
-                <li>Python</li>
-                <li>Pandas / NumPy</li>
-                <li>TensorFlow</li>
-                <li>Jupyter</li>
+                <li>Rasterio</li>
+                <li>NumPy</li>
             </ul>
+             <p style="font-size: 0.85rem; color: #888; font-family: monospace; margin-top: 1rem;">Executes the NDVI math subtraction formula.</p>
         </div>
         <div class="tech-category tech-apis">
-            <h3 style="color: #ffd700">INTEGRATIONS</h3>
+            <h3 style="color: #ffd700">VISUALIZATION</h3>
             <ul>
-                <li>Copernicus API</li>
-                <li>Google Earth Engine</li>
-                <li>Twilio SMS</li>
-                <li>Mapbox GL</li>
+                <li>Matplotlib</li>
+                <li>Folium</li>
             </ul>
+             <p style="font-size: 0.85rem; color: #888; font-family: monospace; margin-top: 1rem;">Renders the colored heatmaps.</p>
         </div>
     </div>
-    <div class="pitch" style="margin-top: 1rem; font-size: 1.2rem;">"A modular architecture allows us to process petabytes of satellite imagery natively without choking the user's browser."</div>
+    <div class="pitch" style="margin-top: 1rem; font-size: 1.2rem;">"It looks expensive because 'Satellite Data' sounds like a government project, but it's actually easy—the code is mostly finding images and doing a subtraction formula."</div>
 </section>
 
 <section id="s12">
-    <div class="buzzwords" style="color:#ff3333;">Live Telemetry Feed</div>
-    <h2 class="section-title" style="margin-bottom: 0;">System Online.</h2>
+    <div class="buzzwords" style="color:#ff3333;">The "God View"</div>
+    <h2 class="section-title" style="margin-bottom: 0;">Telangana District Scan.</h2>
     <div class="map-container">
         <!-- High-contrast dark satellite map -->
         <div class="map-bg"></div>
