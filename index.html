@@ -306,9 +306,29 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 .status-dot { display: inline-block; width: 8px; height: 8px; background: #00ff88; border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px #00ff88; animation: flashNormal 2s infinite; }
 @keyframes flashNormal { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
+/* Global Slide Transition Effect */
+#slide-transition {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: #00ff88; z-index: 9999; pointer-events: none;
+    opacity: 0; transform: scaleY(0); transform-origin: top; mix-blend-mode: overlay;
+}
+#slide-transition.flash { animation: transitionFlash 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
+@keyframes transitionFlash {
+    0% { opacity: 0.8; transform: scaleY(0); background: #fff; }
+    50% { opacity: 0.5; transform: scaleY(1); background: #00ff88; }
+    100% { opacity: 0; transform: scaleY(1); }
+}
+
+/* Telangana State Heatmap Pulsing */
+@keyframes heatPulse {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(1.2); opacity: 1; }
+}
+
 </style>
 </head>
 <body>
+<div id="slide-transition"></div>
 <div id="progress-bar"></div>
 
 <!-- Perpetual UI Elements -->
@@ -340,6 +360,43 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
         <div class="stat-box"><h3><span class="counter" data-target="100">0</span>%</h3><p>Reactive Post-Mortem</p></div>
     </div>
     <div class="pitch">"Farmers only realize their crops are dying when they turn yellow or brown. By then, it's too late. This latency is what leads to ultimate financial ruin."</div>
+</section>
+
+<section id="s8">
+    <div class="buzzwords">Democratizing Space Tech • Corruption-Free Auditing • UN SDG Aligned</div>
+    <h2 class="section-title">Societal Impact</h2>
+    <div class="sdg-grid" id="sdg-trigger">
+        
+        <!-- SDG 1 Card -->
+        <div class="sdg-flip-card">
+            <div class="sdg-flip-inner">
+                <div class="sdg-flip-front" style="background: #e5243b;">
+                    <h1>1</h1>
+                    <h2>NO POVERTY</h2>
+                    <div style="font-size: 0.8rem; letter-spacing: 2px; margin-top: 10px;">UN SDG ALIGNMENT</div>
+                </div>
+                <div class="sdg-flip-back" style="background: #c31e31;">
+                    <p>By protecting crop yields, we prevent the deep generational debt that plagues smallholder farmers after a failed harvest.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SDG 2 Card -->
+        <div class="sdg-flip-card">
+            <div class="sdg-flip-inner">
+                <div class="sdg-flip-front" style="background: #dda63a;">
+                    <h1>2</h1>
+                    <h2>ZERO HUNGER</h2>
+                    <div style="font-size: 0.8rem; letter-spacing: 2px; margin-top: 10px;">UN SDG ALIGNMENT</div>
+                </div>
+                <div class="sdg-flip-back" style="background: #be8e31;">
+                    <p>Pre-emptive irrigation and focused resource allocation directly stabilize local food security before a famine can take hold.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="pitch">"This isn't just about saving plants; it's about removing the middleman. Satellite data cannot be bribed. It ensures targeted, corruption-free relief directly to the most vulnerable."</div>
 </section>
 
 <section id="s3">
@@ -443,41 +500,6 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
     <div class="pitch">"Gram Panchayats don't have to look at the data. The data finds them. Our automated triggers send SMS alerts the second a threshold is breached."</div>
 </section>
 
-<section id="s8">
-    <div class="buzzwords">Democratizing Space Tech • Corruption-Free Auditing • Grassroots Resilience</div>
-    <h2 class="section-title">Societal Impact</h2>
-    <div class="sdg-grid" id="sdg-trigger">
-        
-        <!-- SDG 1 Card -->
-        <div class="sdg-flip-card">
-            <div class="sdg-flip-inner">
-                <div class="sdg-flip-front" style="background: #e5243b;">
-                    <h1>1</h1>
-                    <h2>NO POVERTY</h2>
-                </div>
-                <div class="sdg-flip-back" style="background: #c31e31;">
-                    <p>By protecting crop yields, we prevent the deep generational debt that plagues smallholder farmers after a failed harvest.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- SDG 2 Card -->
-        <div class="sdg-flip-card">
-            <div class="sdg-flip-inner">
-                <div class="sdg-flip-front" style="background: #dda63a;">
-                    <h1>2</h1>
-                    <h2>ZERO HUNGER</h2>
-                </div>
-                <div class="sdg-flip-back" style="background: #be8e31;">
-                    <p>Pre-emptive irrigation and focused resource allocation directly stabilize local food security before a famine can take hold.</p>
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <div class="pitch">"This isn't just about saving plants; it's about removing the middleman. Satellite data cannot be bribed. It ensures targeted, corruption-free relief directly to the most vulnerable."</div>
-</section>
-
 <section id="s10">
     <div class="buzzwords">Iterative Prototyping</div>
     <h2 class="section-title">The Roadmap</h2>
@@ -531,12 +553,16 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 
 <section id="s12">
     <div class="buzzwords" style="color:#ff3333;">The "God View"</div>
-    <h2 class="section-title" style="margin-bottom: 0;">Telangana District Scan.</h2>
+    <h2 class="section-title" style="margin-bottom: 0;">Telangana State Heatmap.</h2>
     <div class="map-container">
         <!-- High-contrast dark satellite map -->
         <div class="map-bg"></div>
         <!-- CRT Scanline Overlay -->
         <div class="map-scanlines"></div>
+        
+        <!-- Heatmap Overlay Blobs -->
+        <div style="position: absolute; top: 30%; left: 40%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,51,51,0.6) 0%, transparent 70%); mix-blend-mode: screen; animation: heatPulse 4s infinite alternate; pointer-events: none; z-index: 6;"></div>
+        <div style="position: absolute; top: 50%; left: 60%; width: 250px; height: 250px; background: radial-gradient(circle, rgba(255,100,0,0.5) 0%, transparent 70%); mix-blend-mode: screen; animation: heatPulse 3s infinite alternate-reverse; pointer-events: none; z-index: 6;"></div>
         
         <!-- Multi-part Radar System -->
         <div class="radar-system">
@@ -549,16 +575,17 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
             
             <!-- Dynamic Coordinate Text -->
             <div class="telemetry-data" id="coord-display">
-                LAT: 16.5061° N<br>
-                LON: 80.6480° E<br>
-                ALT: 450.2m<br>
-                NDVI: <span style="color:#ff3333">0.12 (CRITICAL)</span>
+                STATE: TELANGANA<br>
+                LAT: 17.1231° N<br>
+                LON: 79.2088° E<br>
+                SOIL TEMP: <span style="color:#ff3333">42.5°C (CRITICAL)</span><br>
+                NDVI: <span style="color:#ff3333">0.12 (STRESS)</span>
             </div>
         </div>
         
         <div style="z-index: 10; font-family: monospace; color: #ff3333; position: absolute; bottom: 20px;">[ SATELLITE UPLINK SECURED ]</div>
     </div>
-    <div class="pitch" style="margin-top: 2rem;">"We don't just have concepts; we have code. Here is a live, raw feed of the map interface we are building for our next presentation. Thank you."</div>
+    <div class="pitch" style="margin-top: 2rem;">"We don't just have concepts; we have code. Here is a live, raw feed of the state-wide thermal and moisture map we are building for our next presentation. Thank you."</div>
 </section>
 
 <section id="s13">
@@ -633,6 +660,14 @@ setTimeout(() => {
         const progressPercentage = (currentSlide / (sections.length - 1)) * 100;
         if (progressBar) progressBar.style.width = `${progressPercentage}%`;
         
+        // Trigger visual transition effect
+        const transitionEl = document.getElementById('slide-transition');
+        if (transitionEl) {
+            transitionEl.classList.remove('flash');
+            void transitionEl.offsetWidth; // trigger reflow
+            transitionEl.classList.add('flash');
+        }
+
         // Trigger animations for the new active slide
         triggerAnimations(targetSection.id);
     }
@@ -698,29 +733,30 @@ setTimeout(() => {
             });
         }
 
-        // S12: Live Telemetry Update Simulation (Was S10)
+        // S12: Live Telemetry Update Simulation
         if(sectionId === 's12') {
             const coordDisplay = document.getElementById('coord-display');
             if(coordDisplay && !coordDisplay.dataset.active) {
                 coordDisplay.dataset.active = "true";
-                let baseLat = 16.5061;
-                let baseLon = 80.6480;
+                let baseLat = 17.1231;
+                let baseLon = 79.2088;
+                let baseTemp = 42.5;
                 let baseNdvi = 0.12;
                 
                 setInterval(() => {
-                    // Jitter the coordinates slightly to simulate live tracking
                     const lat = (baseLat + (Math.random() * 0.0004 - 0.0002)).toFixed(4);
                     const lon = (baseLon + (Math.random() * 0.0004 - 0.0002)).toFixed(4);
-                    const alt = (450.2 + (Math.random() * 2 - 1)).toFixed(1);
+                    const temp = (baseTemp + (Math.random() * 0.8 - 0.4)).toFixed(1);
                     const ndvi = (baseNdvi + (Math.random() * 0.02 - 0.01)).toFixed(2);
                     
                     coordDisplay.innerHTML = `
+                        STATE: TELANGANA<br>
                         LAT: ${lat}° N<br>
                         LON: ${lon}° E<br>
-                        ALT: ${alt}m<br>
-                        NDVI: <span style="color:#ff3333">${ndvi} (CRITICAL)</span>
+                        SOIL TEMP: <span style="color:#ff3333">${temp}°C (CRITICAL)</span><br>
+                        NDVI: <span style="color:#ff3333">${ndvi} (STRESS)</span>
                     `;
-                }, 2000); // Update every 2 seconds
+                }, 2000); 
             }
         }
 
@@ -743,6 +779,21 @@ setTimeout(() => {
         } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
             goToSlide(currentSlide - 1);
         }
+    });
+
+    // Mouse Wheel Scrolling
+    let canScroll = true;
+    document.addEventListener('wheel', (e) => {
+        if (!canScroll) return;
+        canScroll = false;
+        
+        if (e.deltaY > 0) {
+            goToSlide(currentSlide + 1);
+        } else if (e.deltaY < 0) {
+            goToSlide(currentSlide - 1);
+        }
+        
+        setTimeout(() => canScroll = true, 1000); // 1-second debounce delay
     });
 
     // Perpetual Continuous Clock
