@@ -166,43 +166,57 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 .milestone:nth-child(even) .dot { left: -10px; }
 .timeline.draw-line .milestone .dot { transform: scale(1); }
 
-/* S11: Tech Stack (Premium Glassmorphism) */
-.tech-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 3rem; width: 80%; max-width: 1100px; margin-top: 2rem; perspective: 1000px; }
-.tech-category { 
-    background: linear-gradient(135deg, rgba(30,30,30,0.8) 0%, rgba(10,10,10,0.9) 100%); 
-    border: 1px solid rgba(255,255,255,0.1); 
-    border-radius: 20px; padding: 2.5rem; text-align: left; 
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
-    backdrop-filter: blur(10px);
-    position: relative; overflow: hidden;
+/* S11: Tech Stack (Data Pipeline Architecture) */
+.tech-pipeline {
+    display: flex; align-items: center; justify-content: center; width: 100%; max-width: 1200px;
+    margin: 4rem 0; position: relative; z-index: 10;
 }
-.tech-category::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: currentColor; }
-.tech-category:hover { transform: translateY(-10px) rotateX(5deg) rotateY(-5deg); box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.1); }
-.tech-category h3 { font-size: 1.5rem; margin-top: 0; margin-bottom: 1.5rem; letter-spacing: 2px; }
-.tech-category ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 1rem; position: relative; z-index: 2; }
-.tech-category li { background: rgba(0,0,0,0.5); padding: 0.6rem 1.2rem; border-radius: 8px; font-family: monospace; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s; color: #eee; }
 
-/* Category specific colors (Glassmorphism Accents) */
-.tech-frontend { color: #00ff88; }
-.tech-frontend::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0,255,136,0.1) 0%, transparent 60%); pointer-events: none; z-index: 1; }
-.tech-frontend li:hover { border-color: #00ff88; background: rgba(0,255,136,0.1); box-shadow: 0 0 15px rgba(0,255,136,0.3); transform: translateY(-3px); }
+.pipeline-node {
+    background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(5,5,5,0.95) 100%);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+    width: 280px; padding: 2rem; position: relative; text-align: left;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px); z-index: 5;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s;
+    opacity: 0; transform: translateY(40px) scale(0.9);
+}
 
-.tech-backend { color: #00ccff; }
-.tech-backend::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0,204,255,0.1) 0%, transparent 60%); pointer-events: none; z-index: 1; }
-.tech-backend li:hover { border-color: #00ccff; background: rgba(0,204,255,0.1); box-shadow: 0 0 15px rgba(0,204,255,0.3); transform: translateY(-3px); }
+.pipeline-node:hover { transform: translateY(-10px) scale(1.05); }
+.pipeline-node h3 { font-size: 1.2rem; margin-top: 0; margin-bottom: 1rem; font-family: monospace; letter-spacing: 2px; text-transform: uppercase; }
+.pipeline-node ul { list-style: none; padding: 0; margin: 0; }
+.pipeline-node li { background: rgba(0,0,0,0.5); padding: 0.6rem 1rem; margin-bottom: 0.8rem; border-radius: 6px; font-family: monospace; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.05); color: #eee; display: flex; align-items: center; }
+.pipeline-node li::before { content: '>'; margin-right: 10px; font-weight: bold; opacity: 0.7; }
+.pipeline-subtext { font-size: 0.85rem; color: #777; font-family: monospace; margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem; line-height: 1.4; }
 
-.tech-stats { color: #ff3333; }
-.tech-stats::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,51,51,0.1) 0%, transparent 60%); pointer-events: none; z-index: 1; }
-.tech-stats li:hover { border-color: #ff3333; background: rgba(255,51,51,0.1); box-shadow: 0 0 15px rgba(255,51,51,0.3); transform: translateY(-3px); }
+/* Node Specific Glowing Accents */
+.node-source { border-top: 3px solid #00ccff; }
+.node-source:hover { box-shadow: 0 20px 40px rgba(0,204,255,0.15), inset 0 0 20px rgba(0,204,255,0.05); }
+.node-source h3, .node-source li::before { color: #00ccff; }
 
-.tech-apis { color: #ffd700; }
-.tech-apis::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 60%); pointer-events: none; z-index: 1; }
-.tech-apis li:hover { border-color: #ffd700; background: rgba(255,215,0,0.1); box-shadow: 0 0 15px rgba(255,215,0,0.3); transform: translateY(-3px); }
+.node-process { border-top: 3px solid #ff3333; }
+.node-process:hover { box-shadow: 0 20px 40px rgba(255,51,51,0.15), inset 0 0 20px rgba(255,51,51,0.05); }
+.node-process h3, .node-process li::before { color: #ff3333; }
 
-/* Tech Category Animations */
-.tech-category { opacity: 0; transform: translateY(40px) scale(0.9); transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.tech-category.pop-in { opacity: 1; transform: translateY(0) scale(1); }
+.node-output { border-top: 3px solid #00ff88; }
+.node-output:hover { box-shadow: 0 20px 40px rgba(0,255,136,0.15), inset 0 0 20px rgba(0,255,136,0.05); }
+.node-output h3, .node-output li::before { color: #00ff88; }
+
+/* Animated Data Conduits */
+.pipeline-conduit {
+    flex-grow: 1; height: 4px; background: rgba(255,255,255,0.1); position: relative;
+    overflow: hidden; opacity: 0; transition: opacity 0.5s;
+}
+.pipeline-conduit::after {
+    content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+    animation: dataFlowPulse 1.5s infinite linear;
+}
+@keyframes dataFlowPulse { 0% { left: -50%; } 100% { left: 100%; } }
+
+/* Reveal Animations */
+.pipeline-node.pop-in { opacity: 1; transform: translateY(0) scale(1); }
+.pipeline-conduit.pop-in { opacity: 1; }
 
 /* Ambient Particles */
 #ambient-particles { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 2; overflow: hidden; }
@@ -544,41 +558,44 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 <section id="s11">
     <div class="buzzwords">Simple & Flashy</div>
     <h2 class="section-title">The Tech Stack</h2>
-    <div class="tech-grid" id="tech-trigger">
-        <div class="tech-category tech-frontend">
-            <h3 style="color: #00ff88">FRONTEND</h3>
-            <ul>
-                <li>Streamlit (Python)</li>
-                <li>HTML / CSS Integration</li>
-            </ul>
-            <p style="font-size: 0.85rem; color: #888; font-family: monospace; margin-top: 1rem;">Turns data scripts into a website instantly.</p>
-        </div>
-        <div class="tech-category tech-backend">
-            <h3 style="color: #00ccff">DATA SOURCE</h3>
+    <div class="tech-pipeline" id="tech-trigger">
+        
+        <!-- Data Source Node -->
+        <div class="pipeline-node node-source">
+            <h3>01. Data Source</h3>
             <ul>
                 <li>Sentinel-2</li>
                 <li>Google Earth Engine</li>
             </ul>
-             <p style="font-size: 0.85rem; color: #888; font-family: monospace; margin-top: 1rem;">Free satellite images via Python libraries.</p>
+            <div class="pipeline-subtext">Hijacks petabytes of free orbital imagery via Python scripts.</div>
         </div>
-        <div class="tech-category tech-stats">
-            <h3 style="color: #ff3333">PROCESSING</h3>
+        
+        <div class="pipeline-conduit"></div>
+        
+        <!-- Processing Node -->
+        <div class="pipeline-node node-process">
+            <h3>02. Processing</h3>
             <ul>
                 <li>Rasterio</li>
                 <li>NumPy</li>
             </ul>
-             <p style="font-size: 0.85rem; color: #888; font-family: monospace; margin-top: 1rem;">Executes the NDVI math subtraction formula.</p>
+            <div class="pipeline-subtext">Executes the NDVI algorithmic subtraction logic.</div>
         </div>
-        <div class="tech-category tech-apis">
-            <h3 style="color: #ffd700">VISUALIZATION</h3>
+        
+        <div class="pipeline-conduit"></div>
+        
+        <!-- Output Node -->
+        <div class="pipeline-node node-output">
+            <h3>03. Visualization</h3>
             <ul>
-                <li>Matplotlib</li>
-                <li>Folium</li>
+                <li>Streamlit (Python)</li>
+                <li>Matplotlib / Folium</li>
             </ul>
-             <p style="font-size: 0.85rem; color: #888; font-family: monospace; margin-top: 1rem;">Renders the colored heatmaps.</p>
+            <div class="pipeline-subtext">Renders rapid, functional front-end dashboard UI instantly.</div>
         </div>
+        
     </div>
-    <div class="pitch" style="margin-top: 1rem; font-size: 1.2rem;">"It looks expensive because 'Satellite Data' sounds like a government project, but it's actually easy—the code is mostly finding images and doing a subtraction formula."</div>
+    <div class="pitch" style="margin-top: 1rem; font-size: 1.2rem;">"Our architecture is a streamlined data pipeline. It looks complex, but beneath the hood it relies on powerful, open-source python libraries to process satellite data seamlessly."</div>
 </section>
 
 <section id="s12">
@@ -832,10 +849,18 @@ setTimeout(() => {
             document.getElementById('timeline-trigger').classList.add('draw-line');
         }
 
-        // S11: Tech Stack Reveal
+        // S11: Tech Pipeline Reveal
         if(sectionId === 's11') {
-            document.querySelectorAll('#s11 .tech-category').forEach((el, index) => {
-                setTimeout(() => el.classList.add('pop-in'), index * 150);
+            const nodes = document.querySelectorAll('#s11 .pipeline-node');
+            const conduits = document.querySelectorAll('#s11 .pipeline-conduit');
+            
+            nodes.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('pop-in');
+                    if(conduits[index]) {
+                        setTimeout(() => conduits[index].classList.add('pop-in'), 300);
+                    }
+                }, index * 600);
             });
         }
 
