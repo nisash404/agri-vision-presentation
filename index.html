@@ -9,6 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <style>
 /* 1. Global Styles & Typography */
 body, html { margin: 0; padding: 0; background: #050505; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; cursor: crosshair; }
@@ -119,6 +120,20 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 .sms-notification { position: absolute; top: 20px; right: -400px; background: #111; padding: 1.5rem; border-left: 4px solid #ff3333; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); transition: right 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 100; font-family: monospace; }
 .sms-notification.show { right: 10%; animation: sirenPulse 0.5s infinite alternate; border: 2px solid #ff3333; }
 @keyframes sirenPulse { 0% { box-shadow: 0 0 10px #ff3333, inset 0 0 10px rgba(255,51,51,0.2); background: #2a0000; } 100% { box-shadow: 0 0 40px #ff3333, inset 0 0 30px rgba(255,51,51,0.5); background: #4a0000; color: #fff; text-shadow: 0 0 5px #fff; } }
+
+/* Critical Alert Glitch Effect */
+.glitch-text {
+    animation: glitch 0.3s linear infinite;
+    color: #ff3333;
+    font-weight: bold;
+    text-shadow: 2px 0 #00ff88, -2px 0 #0000ff;
+    display: inline-block;
+}
+@keyframes glitch {
+    2%, 64% { transform: translate(2px,0) skew(0deg); }
+    4%, 60% { transform: translate(-2px,0) skew(0deg); }
+    62% { transform: translate(0,0) skew(5deg); }
+}
 
 /* S7 Fake Override Button */
 .execute-btn {
@@ -536,7 +551,7 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
         <div class="dash-body">
             <div class="dash-sidebar">
                 <div class="dash-graph" style="background: rgba(255,51,51,0.2); border: 1px solid #ff3333; display:flex; align-items:center; justify-content:center; color:#ff3333; font-weight:bold; text-align: center; padding: 10px;">MOISTURE DROP DETECTED</div>
-                <div class="dash-graph"></div>
+                <div id="moisture-chart" style="background: #0a0a0a; border: 1px solid #333; border-radius: 8px; padding: 15px; margin-top: 20px; box-shadow: 0 0 20px rgba(0, 255, 136, 0.05);"></div>
             </div>
             <div class="dash-map">
                 <div style="position:absolute; top:40%; left:40%; width:50px; height:50px; background:radial-gradient(circle, #ff0000, transparent); border-radius:50%;"></div>
@@ -547,7 +562,7 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 </section>
 
 <section id="s7">
-    <div class="sms-notification" id="sms">ALERT: CRITICAL RISK DETECTED in Sector 4.<br><br>Action: Recommend deploying water tankers.</div>
+    <div class="sms-notification" id="sms"><h3 class="glitch-text" style="margin-top: 0; font-size: 1.2rem;">ALERT: CRITICAL RISK DETECTED in Sector 4.</h3><br>Action: Recommend deploying water tankers.</div>
     <div class="buzzwords">Automated Telemetry • Trigger-Based Actuation</div>
     <h2 class="section-title">The Alert System</h2>
     <div class="automation-container">
@@ -981,6 +996,30 @@ setTimeout(() => {
         particle.style.boxShadow = `0 0 ${size * 2}px ${particle.style.background}`;
         
         particleContainer.appendChild(particle);
+    }
+
+    // ApexCharts: Predictive Moisture Trend
+    if (document.querySelector("#moisture-chart")) {
+        var options = {
+            series: [{
+                name: 'Actual Moisture',
+                data: [85, 82, 80, 78, 75, 70, null, null, null] // Green line
+            }, {
+                name: 'AI Predicted Drop',
+                data: [null, null, null, null, null, 70, 55, 40, 25] // Red line
+            }],
+            chart: { type: 'area', height: 300, foreColor: '#888', toolbar: { show: false }, animations: { enabled: true, easing: 'easeinout', speed: 800 } },
+            colors: ['#00ff88', '#ff3333'],
+            fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05, stops: [0, 90, 100] } },
+            dataLabels: { enabled: false },
+            stroke: { curve: 'smooth', width: 3 },
+            xaxis: { categories: ['Day 1', 'Day 5', 'Day 10', 'Day 15', 'Day 20', 'Day 25', 'Day 30', 'Day 35', 'Day 40'] },
+            yaxis: { title: { text: 'Soil Moisture Level (%)' }, min: 0, max: 100 },
+            theme: { mode: 'dark' },
+            grid: { borderColor: '#333', strokeDashArray: 4 }
+        };
+        var chart = new ApexCharts(document.querySelector("#moisture-chart"), options);
+        chart.render();
     }
 
 }, 500); // Small delay ensures CDN scripts initialize first
