@@ -122,14 +122,30 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 .milestone:nth-child(even) .dot { left: -9px; }
 .timeline.draw-line .milestone .dot { transform: scale(1); }
 
-/* S11: Thank You */
-#s11 h1 { font-size: 6rem; color: #fff; text-shadow: 0 0 30px rgba(0, 255, 136, 0.5); margin-bottom: 2rem; }
-.team-container { display: flex; gap: 4rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
-.team-member { font-size: 1.5rem; color: #aaa; font-family: monospace; opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.215, 0.61, 0.355, 1); }
-.team-member.reveal { opacity: 1; transform: translateY(0); color: #00ff88; text-shadow: 0 0 10px rgba(0,255,136,0.3); }
+/* S11: Tech Stack */
+.tech-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; width: 80%; max-width: 1000px; margin-top: 2rem; }
+.tech-category { background: rgba(15, 15, 15, 0.8); border: 1px solid #333; border-radius: 12px; padding: 2rem; text-align: left; transition: transform 0.3s; }
+.tech-category:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.tech-category h3 { font-size: 1.5rem; margin-top: 0; margin-bottom: 1.5rem; letter-spacing: 2px; }
+.tech-category ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 1rem; }
+.tech-category li { background: #111; padding: 0.5rem 1rem; border-radius: 6px; font-family: monospace; font-size: 0.9rem; border: 1px solid #222; transition: all 0.3s; }
 
-/* S10: The Nuke (Upgraded) */
-#s10 { background: #000; border: none; }
+/* Category specific colors */
+.tech-frontend { border-top: 3px solid #00ff88; }
+.tech-frontend li:hover { border-color: #00ff88; color: #00ff88; box-shadow: 0 0 10px rgba(0,255,136,0.3); }
+.tech-backend { border-top: 3px solid #00ccff; }
+.tech-backend li:hover { border-color: #00ccff; color: #00ccff; box-shadow: 0 0 10px rgba(0,204,255,0.3); }
+.tech-stats { border-top: 3px solid #ff3333; }
+.tech-stats li:hover { border-color: #ff3333; color: #ff3333; box-shadow: 0 0 10px rgba(255,51,51,0.3); }
+.tech-apis { border-top: 3px solid #ffd700; }
+.tech-apis li:hover { border-color: #ffd700; color: #ffd700; box-shadow: 0 0 10px rgba(255,215,0,0.3); }
+
+/* Tech Category Animations */
+.tech-category { opacity: 0; transform: scale(0.9); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.tech-category.pop-in { opacity: 1; transform: scale(1); }
+
+/* S12: The Nuke (Upgraded - Was S10) */
+#s12 { background: #000; border: none; }
 .map-container { 
     width: 90%; max-width: 1200px; height: 60vh; 
     background: #050505; border-radius: 15px; border: 1px solid #333; 
@@ -378,8 +394,8 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
     <div class="pitch">"This isn't just about saving plants; it's about removing the middleman. Satellite data cannot be bribed. It ensures targeted, corruption-free relief directly to the most vulnerable."</div>
 </section>
 
-<section id="s9">
-    <div class="buzzwords">Agile Deployment • Iterative Prototyping</div>
+<section id="s10">
+    <div class="buzzwords">Iterative Prototyping</div>
     <h2 class="section-title">The Roadmap</h2>
     <div class="timeline" id="timeline-trigger">
         <div class="milestone"><div class="dot"></div><strong>Phase 1</strong><br>Architecture & Data Sourcing (Current)</div>
@@ -389,7 +405,51 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
     <div class="pitch">"We are currently in Phase 1, ingesting the API data. By Phase 3, we will have a live, interactive map."</div>
 </section>
 
-<section id="s10">
+<section id="s11">
+    <div class="buzzwords">Microservices • Serverless Architecture • Edge Rendering</div>
+    <h2 class="section-title">The Tech Stack</h2>
+    <div class="tech-grid" id="tech-trigger">
+        <div class="tech-category tech-frontend">
+            <h3 style="color: #00ff88">FRONTEND</h3>
+            <ul>
+                <li>React.js</li>
+                <li>Tailwind CSS</li>
+                <li>Framer Motion</li>
+                <li>Three.js</li>
+            </ul>
+        </div>
+        <div class="tech-category tech-backend">
+            <h3 style="color: #00ccff">BACKEND</h3>
+            <ul>
+                <li>Node.js</li>
+                <li>Express</li>
+                <li>PostgreSQL</li>
+                <li>Prisma ORM</li>
+            </ul>
+        </div>
+        <div class="tech-category tech-stats">
+            <h3 style="color: #ff3333">DATA & STATS</h3>
+            <ul>
+                <li>Python</li>
+                <li>Pandas / NumPy</li>
+                <li>TensorFlow</li>
+                <li>Jupyter</li>
+            </ul>
+        </div>
+        <div class="tech-category tech-apis">
+            <h3 style="color: #ffd700">INTEGRATIONS</h3>
+            <ul>
+                <li>Copernicus API</li>
+                <li>Google Earth Engine</li>
+                <li>Twilio SMS</li>
+                <li>Mapbox GL</li>
+            </ul>
+        </div>
+    </div>
+    <div class="pitch" style="margin-top: 1rem; font-size: 1.2rem;">"A modular architecture allows us to process petabytes of satellite imagery natively without choking the user's browser."</div>
+</section>
+
+<section id="s12">
     <div class="buzzwords" style="color:#ff3333;">Live Telemetry Feed</div>
     <h2 class="section-title" style="margin-bottom: 0;">System Online.</h2>
     <div class="map-container">
@@ -421,7 +481,7 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
     <div class="pitch" style="margin-top: 2rem;">"We don't just have concepts; we have code. Here is a live, raw feed of the map interface we are building for our next presentation. Thank you."</div>
 </section>
 
-<section id="s11">
+<section id="s13">
     <div class="buzzwords" style="color: #00ff88;">End of Transmission</div>
     <h1>Thank You.</h1>
     <h2 class="section-title" style="margin-top: 2rem; margin-bottom: 3rem; font-size: 1.2rem; letter-spacing: 5px; color: #555;">DEVELOPED BY</h2>
@@ -537,13 +597,20 @@ setTimeout(() => {
             });
         }
 
-        // S9: Timeline Draw
-        if(sectionId === 's9') {
+        // S10: Timeline Draw (Was S9)
+        if(sectionId === 's10') {
             document.getElementById('timeline-trigger').classList.add('draw-line');
         }
 
-        // S10: Live Telemetry Update Simulation
-        if(sectionId === 's10') {
+        // S11: Tech Stack Reveal
+        if(sectionId === 's11') {
+            document.querySelectorAll('#s11 .tech-category').forEach((el, index) => {
+                setTimeout(() => el.classList.add('pop-in'), index * 150);
+            });
+        }
+
+        // S12: Live Telemetry Update Simulation (Was S10)
+        if(sectionId === 's12') {
             const coordDisplay = document.getElementById('coord-display');
             if(coordDisplay && !coordDisplay.dataset.active) {
                 coordDisplay.dataset.active = "true";
@@ -568,9 +635,9 @@ setTimeout(() => {
             }
         }
 
-        // S11: Team Member Reveal
-        if(sectionId === 's11') {
-            document.querySelectorAll('#s11 .team-member').forEach((el, index) => {
+        // S13: Team Member Reveal (Was S11)
+        if(sectionId === 's13') {
+            document.querySelectorAll('#s13 .team-member').forEach((el, index) => {
                 setTimeout(() => el.classList.add('reveal'), 500 + (index * 400));
             });
         }
