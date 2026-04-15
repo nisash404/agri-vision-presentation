@@ -492,28 +492,7 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
     <div class="pitch" style="margin-top: 2rem;">"This is strategic integration via corruption-free technology. We aren't just checking boxes; we are building the infrastructure for a more resilient future."</div>
 </section>
 
-<section id="s3">
-    <div class="buzzwords">Time-Travel Slider • Visible vs Spectral</div>
-    <h2 class="section-title">The Time-Travel Slider</h2>
-    <div class="diagnostic-container" style="position: relative;">
-        <!-- Visual Layer (What humans see - Day 1) -->
-        <div class="diag-layer human-eye" style="background: url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=2070&auto=format&fit=crop') center/cover;"></div>
-        
-        <!-- Spectral Layer (What Agri-Vision sees - Day 30) -->
-        <div class="diag-layer spectral-eye" id="heat-layer" style="background: url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=2070&auto=format&fit=crop') center/cover; filter: hue-rotate(180deg) sepia(100%) saturate(300%) hue-rotate(-50deg); opacity: 1; clip-path: inset(0 50% 0 0); animation: none;"></div>
-        
-        <!-- The Slider Bar -->
-        <div class="scanner-bar" id="slider-line" style="left: 50%; box-shadow: 0 0 10px #fff; background: #fff; animation: none;"></div>
-        
-        <input type="range" min="0" max="100" value="50" style="position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor: ew-resize; z-index: 30;" id="slider-input">
-        
-        <div class="diag-labels">
-            <span style="color: #00ff88; text-shadow: 0 0 10px #000; z-index: 20;">DAY 1: GREEN (HUMAN EYE)</span>
-            <span style="color: #ff3333; text-shadow: 0 0 10px #000; z-index: 20;">DAY 30: RED (NDVI STRESS)</span>
-        </div>
-    </div>
-    <div class="pitch">"We detect moisture stress 2 weeks before the human eye can see it. Drag the slider to see the field change from Day 1 to Day 30, proving our system caught it early."</div>
-</section>
+
 
 <section id="s4">
     <div class="buzzwords">Normalized Difference Vegetation Index</div>
@@ -875,19 +854,6 @@ setTimeout(() => {
         backgroundColor: 0x050505
     });
 
-    // 3. Image Slider Logic (Section 3)
-    const sliderInput = document.getElementById('slider-input');
-    const heatLayer = document.getElementById('heat-layer');
-    const sliderLine = document.getElementById('slider-line');
-
-    if (sliderInput) {
-        sliderInput.addEventListener('input', (e) => {
-            initAudio(); playBeep('slider');
-            const val = e.target.value;
-            heatLayer.style.clipPath = `inset(0 ${100 - val}% 0 0)`;
-            sliderLine.style.left = `${val}%`;
-        });
-    }
 
     // 4. Slide Navigation and Animation Triggers
     const sections = document.querySelectorAll('section');
