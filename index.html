@@ -735,40 +735,52 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 </section>
 
 <section id="s12">
-    <div class="buzzwords" style="color:#ff3333;">The "God View"</div>
-    <h2 class="section-title" style="margin-bottom: 0;">Telangana State Heatmap.</h2>
-    <div class="map-container">
-        <!-- High-contrast dark satellite map -->
-        <div class="map-bg"></div>
-        <!-- CRT Scanline Overlay -->
-        <div class="map-scanlines"></div>
-        
-        <!-- Heatmap Overlay Blobs -->
-        <div style="position: absolute; top: 30%; left: 40%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,51,51,0.6) 0%, transparent 70%); mix-blend-mode: screen; animation: heatPulse 4s infinite alternate; pointer-events: none; z-index: 6;"></div>
-        <div style="position: absolute; top: 50%; left: 60%; width: 250px; height: 250px; background: radial-gradient(circle, rgba(255,100,0,0.5) 0%, transparent 70%); mix-blend-mode: screen; animation: heatPulse 3s infinite alternate-reverse; pointer-events: none; z-index: 6;"></div>
-        
-        <!-- Multi-part Radar System -->
-        <div class="radar-system">
-            <!-- Pulsing Center Target -->
-            <div class="radar-center"></div>
-            <!-- Rotating Scanner Ring -->
-            <div class="radar-ring"></div>
-            <!-- Sweeping Scanner Beam -->
-            <div class="radar-sweep"></div>
-            
-            <!-- Dynamic Coordinate Text -->
-            <div class="telemetry-data" id="coord-display">
-                STATE: TELANGANA<br>
-                LAT: 17.1231° N<br>
-                LON: 79.2088° E<br>
-                SOIL TEMP: <span style="color:#ff3333">42.5°C (CRITICAL)</span><br>
-                NDVI: <span style="color:#ff3333">0.12 (STRESS)</span>
-            </div>
+    <div class="buzzwords" style="color:#ff3333;">Proof of Concept • Single-Block Analysis • Closed Verification Loop</div>
+    <h2 class="section-title">Sentinel Dashboard // PoC Interface</h2>
+
+    <div class="dashboard-mockup" style="height: auto; max-height: 500px; cursor: default;">
+        <div class="dash-header" style="justify-content: space-between;">
+            <span>PoC / Single-Block Diagnostic / Village XYZ</span>
+            <span style="color: #ff3333;">● STATUS: CRITICAL</span>
         </div>
-        
-        <div style="z-index: 10; font-family: monospace; color: #ff3333; position: absolute; bottom: 20px;">[ SATELLITE UPLINK SECURED ]</div>
+        <div style="padding: 2rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
+
+            <!-- Metric 1: Target -->
+            <div style="grid-column: 1 / -1; background: rgba(0,204,255,0.05); border: 1px solid rgba(0,204,255,0.2); border-radius: 8px; padding: 1.5rem; font-family: monospace; text-align: left;">
+                <div style="color: #555; font-size: 0.75rem; letter-spacing: 3px; margin-bottom: 0.5rem;">TARGET_LOCATION</div>
+                <div style="color: #00ccff; font-size: 1.4rem; font-weight: 900; letter-spacing: 2px;">Village XYZ, Block ABC</div>
+                <div style="color: #444; font-size: 0.8rem; margin-top: 0.5rem;">LAT: 17.1231° N &nbsp;|&nbsp; LON: 79.2088° E &nbsp;|&nbsp; GRID_REF: T44P_S2A</div>
+            </div>
+
+            <!-- Metric 2: Historical Baseline -->
+            <div style="background: rgba(0,255,136,0.05); border: 1px solid rgba(0,255,136,0.15); border-radius: 8px; padding: 1.5rem; font-family: monospace; text-align: center;">
+                <div style="color: #555; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 1rem;">HISTORICAL_BASELINE</div>
+                <div style="font-size: 4rem; font-weight: 900; color: #00ff88; text-shadow: 0 0 20px rgba(0,255,136,0.3); line-height: 1;">38%</div>
+                <div style="color: #555; font-size: 0.8rem; margin-top: 0.8rem;">5-Year Avg. Soil Moisture</div>
+            </div>
+
+            <!-- Metric 3: Current Reading -->
+            <div style="background: rgba(255,200,0,0.05); border: 1px solid rgba(255,200,0,0.15); border-radius: 8px; padding: 1.5rem; font-family: monospace; text-align: center;">
+                <div style="color: #555; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 1rem;">CURRENT_SAT_READING</div>
+                <div style="font-size: 4rem; font-weight: 900; color: #ffcc00; text-shadow: 0 0 20px rgba(255,200,0,0.3); line-height: 1;">22%</div>
+                <div style="color: #555; font-size: 0.8rem; margin-top: 0.8rem;">Live Sentinel-2 Pass</div>
+            </div>
+
+            <!-- Metric 4: Computed Anomaly -->
+            <div style="background: rgba(255,51,51,0.08); border: 2px solid rgba(255,51,51,0.4); border-radius: 8px; padding: 1.5rem; font-family: monospace; text-align: center; box-shadow: 0 0 30px rgba(255,51,51,0.15); animation: sirenPulse 2s infinite alternate;">
+                <div style="color: #555; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 1rem;">COMPUTED_ANOMALY</div>
+                <div style="font-size: 4rem; font-weight: 900; color: #ff3333; text-shadow: 0 0 25px rgba(255,51,51,0.5); line-height: 1;">-16%</div>
+                <div style="color: #ff3333; font-size: 0.85rem; margin-top: 0.8rem; font-weight: bold; letter-spacing: 2px;">⚠ THRESHOLD BREACHED (-15%)</div>
+            </div>
+
+        </div>
+        <div style="border-top: 1px solid #222; padding: 1rem 2rem; font-family: monospace; font-size: 0.8rem; color: #555; display: flex; justify-content: space-between;">
+            <span>SCAN_ID: S2A_T44P_20260415_B08_B04 &nbsp;|&nbsp; CLOUD_MASK: 8%</span>
+            <span style="color: #ff3333;">→ BDO ALERT DISPATCHED</span>
+        </div>
     </div>
-    <div class="pitch" style="margin-top: 2rem;">"We don't just have concepts; we have code. Here is a live, raw feed of the state-wide thermal and moisture map we are building for our next presentation. Thank you."</div>
+
+    <div class="pitch" style="margin-top: 2rem;">"This is the Sentinel Dashboard, restricted to our Proof-of-Concept parameters for Village XYZ. We stripped away the state-wide visualization to focus purely on the raw diagnostic metrics: the baseline, the current reading, and the anomaly. When the computed anomaly breaches our threshold, this interface flags the critical alert for the BDO."</div>
 </section>
 
 <section id="s13">
@@ -1008,34 +1020,7 @@ setTimeout(() => {
             });
         }
 
-        // S12: Live Telemetry Update Simulation
-        if(sectionId === 's12') {
-            const coordDisplay = document.getElementById('coord-display');
-            if(coordDisplay && !coordDisplay.dataset.active) {
-                coordDisplay.dataset.active = "true";
-                initAudio(); playBeep('radar');
-                
-                let baseLat = 17.1231;
-                let baseLon = 79.2088;
-                let baseTemp = 42.5;
-                let baseNdvi = 0.12;
-                
-                setInterval(() => {
-                    const lat = (baseLat + (Math.random() * 0.0004 - 0.0002)).toFixed(4);
-                    const lon = (baseLon + (Math.random() * 0.0004 - 0.0002)).toFixed(4);
-                    const temp = (baseTemp + (Math.random() * 0.8 - 0.4)).toFixed(1);
-                    const ndvi = (baseNdvi + (Math.random() * 0.02 - 0.01)).toFixed(2);
-                    
-                    coordDisplay.innerHTML = `
-                        STATE: TELANGANA<br>
-                        LAT: ${lat}° N<br>
-                        LON: ${lon}° E<br>
-                        SOIL TEMP: <span style="color:#ff3333">${temp}°C (CRITICAL)</span><br>
-                        NDVI: <span style="color:#ff3333">${ndvi} (STRESS)</span>
-                    `;
-                }, 2000); 
-            }
-        }
+        // S12: PoC Dashboard (no dynamic JS needed - static hardcoded data)
 
         // S13: Team Member Reveal (Was S11)
         if(sectionId === 's13') {
