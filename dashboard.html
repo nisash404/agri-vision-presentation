@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agri-Vision // Sentinel Dashboard</title>
+    <meta name="description" content="Agri-Vision Sentinel Dashboard — Real-time village-level soil moisture diagnostics and anomaly detection.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+/* ═══════════════════════════════════════════════ */
+/*  AGRI-VISION SENTINEL DASHBOARD — CORE CSS     */
+/* ═══════════════════════════════════════════════ */
+
+:root {
+    --bg-primary: #050505;
+    --bg-card: #0a0a0f;
+    --bg-card-hover: #0f0f18;
+    --border: rgba(255,255,255,0.06);
+    --border-hover: rgba(255,255,255,0.12);
+    --green: #00ff88;
+    --green-dim: rgba(0,255,136,0.15);
+    --red: #ff3333;
+    --red-dim: rgba(255,51,51,0.15);
+    --yellow: #ffcc00;
+    --yellow-dim: rgba(255,204,0,0.15);
+    --cyan: #00ccff;
+    --cyan-dim: rgba(0,204,255,0.15);
+    --text-primary: #eee;
+    --text-secondary: #666;
+    --text-dim: #333;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-sans: 'Inter', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ─── HEADER ─── */
+.header {
+    height: 48px;
+    background: rgba(5,5,5,0.95);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    backdrop-filter: blur(10px);
+    z-index: 100;
+}
+.header-left { display: flex; align-items: center; gap: 1rem; }
+.header-title { color: var(--text-primary); font-weight: 700; letter-spacing: 3px; }
+.header-sep { color: var(--text-dim); }
+.status-dot {
+    width: 8px; height: 8px; background: var(--green); border-radius: 50%;
+    box-shadow: 0 0 10px var(--green); animation: statusPulse 2s infinite;
+    display: inline-block; margin-right: 8px;
+}
+@keyframes statusPulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+.header-right { display: flex; align-items: center; gap: 1.5rem; }
+.header-clock { color: var(--green); font-weight: 700; }
+
+/* ─── MAIN LAYOUT ─── */
+.main-layout {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+    width: 280px;
+    background: rgba(8,8,12,0.95);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.sidebar-section {
+    padding: 1.2rem;
+    border-bottom: 1px solid var(--border);
+}
+.sidebar-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+/* Village List */
+.village-list { display: flex; flex-direction: column; gap: 4px; }
+.village-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0.7rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+}
+.village-item:hover {
+    background: rgba(255,255,255,0.03);
+    color: var(--text-primary);
+    border-color: var(--border-hover);
+}
+.village-item.active {
+    background: rgba(0,255,136,0.05);
+    color: var(--green);
+    border-color: rgba(0,255,136,0.2);
+    box-shadow: 0 0 15px rgba(0,255,136,0.05);
+}
+.village-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    box-shadow: 0 0 6px currentColor;
+}
+.village-dot.normal { background: var(--green); color: var(--green); }
+.village-dot.warning { background: var(--yellow); color: var(--yellow); }
+.village-dot.critical { background: var(--red); color: var(--red); animation: statusPulse 1s infinite; }
+.village-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.village-anomaly { font-size: 0.7rem; font-weight: 700; flex-shrink: 0; }
+
+/* Alert Feed */
+.alert-feed {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.alert-feed-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 1.2rem 1.2rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.alert-feed-scroll::-webkit-scrollbar { width: 3px; }
+.alert-feed-scroll::-webkit-scrollbar-thumb { background: var(--text-dim); border-radius: 3px; }
+
+.alert-entry {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    line-height: 1.4;
+    color: var(--text-secondary);
+    padding: 6px 8px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.02);
+    border-left: 2px solid var(--text-dim);
+    animation: alertSlideIn 0.3s ease-out;
+}
+.alert-entry.critical { border-left-color: var(--red); color: var(--red); }
+.alert-entry.warning { border-left-color: var(--yellow); color: var(--yellow); }
+.alert-entry.info { border-left-color: var(--cyan); color: var(--cyan); }
+@keyframes alertSlideIn { from { opacity:0; transform:translateX(-10px); } to { opacity:1; transform:translateX(0); } }
+
+/* ─── CONTENT AREA ─── */
+.content {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+.content::-webkit-scrollbar { width: 4px; }
+.content::-webkit-scrollbar-thumb { background: var(--text-dim); border-radius: 4px; }
+
+/* ─── LOCATION BANNER ─── */
+.location-banner {
+    background: var(--bg-card);
+    border: 1px solid rgba(0,204,255,0.15);
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    font-family: var(--font-mono);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+.location-label { font-size: 0.65rem; color: var(--text-secondary); letter-spacing: 3px; }
+.location-value { color: var(--cyan); font-size: 1.1rem; font-weight: 900; letter-spacing: 2px; margin-top: 4px; }
+.location-coords { font-size: 0.75rem; color: var(--text-dim); margin-top: 2px; }
+.location-scan {
+    text-align: right;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* ─── METRIC CARDS ─── */
+.metrics-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.metric-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    font-family: var(--font-mono);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 10px 10px 0 0;
+}
+.metric-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-hover);
+}
+
+.metric-card.baseline::before { background: var(--green); }
+.metric-card.baseline:hover { box-shadow: 0 10px 30px rgba(0,255,136,0.1); }
+
+.metric-card.current::before { background: var(--yellow); }
+.metric-card.current:hover { box-shadow: 0 10px 30px rgba(255,204,0,0.1); }
+
+.metric-card.anomaly::before { background: var(--red); }
+.metric-card.anomaly:hover { box-shadow: 0 10px 30px rgba(255,51,51,0.1); }
+.metric-card.anomaly.critical-pulse {
+    border-color: rgba(255,51,51,0.3);
+    box-shadow: 0 0 30px rgba(255,51,51,0.1);
+    animation: sirenPulse 2s infinite alternate;
+}
+@keyframes sirenPulse {
+    0% { box-shadow: 0 0 15px rgba(255,51,51,0.1); background: var(--bg-card); }
+    100% { box-shadow: 0 0 40px rgba(255,51,51,0.2); background: rgba(255,51,51,0.03); }
+}
+
+.metric-label {
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+.metric-value {
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1;
+}
+.metric-value.green { color: var(--green); text-shadow: 0 0 20px rgba(0,255,136,0.3); }
+.metric-value.yellow { color: var(--yellow); text-shadow: 0 0 20px rgba(255,204,0,0.3); }
+.metric-value.red { color: var(--red); text-shadow: 0 0 25px rgba(255,51,51,0.4); }
+
+.metric-sub {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 0.8rem;
+}
+.metric-badge {
+    display: inline-block;
+    margin-top: 0.6rem;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.metric-badge.safe { background: var(--green-dim); color: var(--green); }
+.metric-badge.warn { background: var(--yellow-dim); color: var(--yellow); }
+.metric-badge.danger { background: var(--red-dim); color: var(--red); }
+
+/* ─── CHART CARDS ─── */
+.chart-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+.chart-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.chart-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+.chart-body { padding: 1rem; }
+
+/* ─── BOTTOM ROW ─── */
+.bottom-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+/* ─── VILLAGE GRID ─── */
+.village-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 1rem;
+}
+.grid-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.8rem;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.grid-card:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+}
+.grid-card.active-grid { border-color: rgba(0,204,255,0.3); background: rgba(0,204,255,0.03); }
+.grid-card-name { font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.grid-card-row { display: flex; justify-content: space-between; align-items: center; }
+.grid-card-anomaly { font-size: 1.1rem; font-weight: 900; }
+.grid-card-status {
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.grid-card-status.normal { background: var(--green-dim); color: var(--green); }
+.grid-card-status.warning { background: var(--yellow-dim); color: var(--yellow); }
+.grid-card-status.critical { background: var(--red-dim); color: var(--red); }
+
+/* ─── FOOTER BAR ─── */
+.footer-bar {
+    height: 32px;
+    background: rgba(5,5,5,0.95);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    flex-shrink: 0;
+}
+.footer-bar .active-count { color: var(--red); }
+
+/* ─── SCROLLBAR GLOBAL ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #222; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="header">
+    <div class="header-left">
+        <span class="header-title">AGRI-VISION</span>
+        <span class="header-sep">//</span>
+        <span>SENTINEL DASHBOARD</span>
+    </div>
+    <div class="header-right">
+        <span><span class="status-dot"></span>SYSTEM: <span style="color:var(--green);">OPERATIONAL</span></span>
+        <span class="header-sep">|</span>
+        <span>UPLINK: <span style="color:var(--green);">SECURE</span></span>
+        <span class="header-sep">|</span>
+        <span class="header-clock" id="header-clock">00:00:00</span>
+    </div>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main-layout">
+
+    <!-- ─── SIDEBAR ─── -->
+    <div class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Target Villages</div>
+            <div class="village-list" id="village-list"></div>
+        </div>
+        <div class="sidebar-section alert-feed">
+            <div class="sidebar-label">Live Alert Feed</div>
+            <div class="alert-feed-scroll" id="alert-feed"></div>
+        </div>
+    </div>
+
+    <!-- ─── CONTENT ─── -->
+    <div class="content">
+
+        <!-- Location Banner -->
+        <div class="location-banner" id="location-banner">
+            <div>
+                <div class="location-label">TARGET_LOCATION</div>
+                <div class="location-value" id="loc-name">—</div>
+                <div class="location-coords" id="loc-coords">—</div>
+            </div>
+            <div class="location-scan" id="loc-scan">—</div>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="metrics-row">
+            <div class="metric-card baseline">
+                <div class="metric-label">HISTORICAL_BASELINE</div>
+                <div class="metric-value green" id="m-baseline">—</div>
+                <div class="metric-sub">5-Year Avg. Soil Moisture</div>
+            </div>
+            <div class="metric-card current">
+                <div class="metric-label">CURRENT_SAT_READING</div>
+                <div class="metric-value yellow" id="m-current">—</div>
+                <div class="metric-sub">Live Sentinel-2 Pass</div>
+            </div>
+            <div class="metric-card anomaly" id="anomaly-card">
+                <div class="metric-label">COMPUTED_ANOMALY</div>
+                <div class="metric-value red" id="m-anomaly">—</div>
+                <div class="metric-sub" id="m-anomaly-sub">Threshold: -15%</div>
+                <div class="metric-badge" id="m-anomaly-badge">—</div>
+            </div>
+        </div>
+
+        <!-- Moisture Trend Chart -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <span><span class="chart-dot" style="background:var(--green);"></span>MOISTURE_TREND // 40-DAY WINDOW</span>
+                <span id="chart-status" style="color:var(--text-dim);">LOADING...</span>
+            </div>
+            <div class="chart-body" id="moisture-chart"></div>
+        </div>
+
+        <!-- Bottom Row -->
+        <div class="bottom-row">
+            <!-- NDVI History -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span><span class="chart-dot" style="background:var(--cyan);"></span>NDVI_HISTORY // MONTHLY</span>
+                </div>
+                <div class="chart-body" id="ndvi-chart"></div>
+            </div>
+
+            <!-- Village Grid Overview -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span><span class="chart-dot" style="background:var(--yellow);"></span>GRID_OVERVIEW // ALL TARGETS</span>
+                </div>
+                <div class="village-grid" id="village-grid"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<div class="footer-bar">
+    <span>AGRI-VISION v1.0 // SENTINEL DIAGNOSTIC PLATFORM</span>
+    <span>TARGETS: 6 &nbsp;|&nbsp; ALERTS: <span class="active-count" id="alert-count">0</span> &nbsp;|&nbsp; SCAN_CYCLE: S2A_T44P</span>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+//  DATA MODEL — 6 HARDCODED VILLAGES
+// ══════════════════════════════════════════════════
+
+const VILLAGES = [
+    {
+        id: 'annaram',
+        name: 'Village Annaram',
+        block: 'Block Medchal',
+        lat: '17.1231° N', lon: '79.2088° E', grid: 'T44P_S2A',
+        baseline: 38, current: 22, anomaly: -16, status: 'critical',
+        moisture: [38, 37, 36, 35, 34, 33, 31, 29, 27, 25, 24, 23, 22, null, null, null, null, null, null, null],
+        predicted: [null, null, null, null, null, null, null, null, null, null, null, null, 22, 19, 16, 14, 12, 11, 10, 9],
+        ndvi: [0.72, 0.68, 0.61, 0.55, 0.48, 0.39, 0.31, 0.25, 0.19, 0.15, 0.12, 0.10],
+    },
+    {
+        id: 'bodhan',
+        name: 'Village Bodhan',
+        block: 'Block Nizamabad',
+        lat: '18.6660° N', lon: '77.8971° E', grid: 'T44Q_S2B',
+        baseline: 42, current: 39, anomaly: -3, status: 'normal',
+        moisture: [42, 43, 41, 42, 40, 41, 40, 39, 40, 39, 39, 38, 39, null, null, null, null, null, null, null],
+        predicted: [null, null, null, null, null, null, null, null, null, null, null, null, 39, 38, 38, 37, 37, 36, 36, 35],
+        ndvi: [0.75, 0.74, 0.73, 0.72, 0.71, 0.70, 0.69, 0.70, 0.71, 0.72, 0.71, 0.70],
+    },
+    {
+        id: 'chintapalli',
+        name: 'Village Chintapalli',
+        block: 'Block Warangal',
+        lat: '17.9689° N', lon: '79.5941° E', grid: 'T44P_S2A',
+        baseline: 35, current: 28, anomaly: -7, status: 'warning',
+        moisture: [35, 35, 34, 33, 33, 32, 31, 30, 30, 29, 29, 28, 28, null, null, null, null, null, null, null],
+        predicted: [null, null, null, null, null, null, null, null, null, null, null, null, 28, 26, 25, 23, 22, 20, 19, 18],
+        ndvi: [0.68, 0.66, 0.63, 0.60, 0.57, 0.54, 0.50, 0.47, 0.44, 0.40, 0.38, 0.35],
+    },
+    {
+        id: 'devarakonda',
+        name: 'Village Devarakonda',
+        block: 'Block Nalgonda',
+        lat: '16.6932° N', lon: '78.9088° E', grid: 'T44N_S2B',
+        baseline: 40, current: 41, anomaly: 1, status: 'normal',
+        moisture: [40, 39, 40, 41, 40, 41, 42, 41, 42, 41, 40, 41, 41, null, null, null, null, null, null, null],
+        predicted: [null, null, null, null, null, null, null, null, null, null, null, null, 41, 41, 40, 40, 40, 39, 39, 39],
+        ndvi: [0.78, 0.77, 0.76, 0.78, 0.79, 0.80, 0.81, 0.80, 0.79, 0.78, 0.77, 0.78],
+    },
+    {
+        id: 'elkathurthy',
+        name: 'Village Elkathurthy',
+        block: 'Block Karimnagar',
+        lat: '18.4386° N', lon: '79.0942° E', grid: 'T44Q_S2A',
+        baseline: 36, current: 19, anomaly: -17, status: 'critical',
+        moisture: [36, 35, 33, 31, 29, 27, 25, 23, 22, 21, 20, 19, 19, null, null, null, null, null, null, null],
+        predicted: [null, null, null, null, null, null, null, null, null, null, null, null, 19, 17, 15, 13, 11, 10, 9, 8],
+        ndvi: [0.70, 0.65, 0.58, 0.50, 0.42, 0.34, 0.27, 0.21, 0.16, 0.13, 0.11, 0.09],
+    },
+    {
+        id: 'farooqnagar',
+        name: 'Village Farooqnagar',
+        block: 'Block Rangareddy',
+        lat: '17.0774° N', lon: '78.0618° E', grid: 'T44P_S2B',
+        baseline: 44, current: 37, anomaly: -7, status: 'warning',
+        moisture: [44, 43, 43, 42, 41, 40, 39, 39, 38, 38, 37, 37, 37, null, null, null, null, null, null, null],
+        predicted: [null, null, null, null, null, null, null, null, null, null, null, null, 37, 35, 34, 32, 31, 29, 28, 27],
+        ndvi: [0.80, 0.78, 0.75, 0.72, 0.68, 0.65, 0.62, 0.58, 0.55, 0.52, 0.50, 0.48],
+    },
+];
+
+const DAYS = ['Day 1','Day 4','Day 7','Day 10','Day 13','Day 16','Day 19','Day 22','Day 25','Day 28','Day 31','Day 34','Day 37','Day 40','Day 43','Day 46','Day 49','Day 52','Day 55','Day 58'];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// ══════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════
+let activeVillageIndex = 0;
+let moistureChart = null;
+let ndviChart = null;
+let alertCounter = 0;
+
+// ══════════════════════════════════════════════════
+//  RENDER FUNCTIONS
+// ══════════════════════════════════════════════════
+
+function renderSidebar() {
+    const list = document.getElementById('village-list');
+    list.innerHTML = VILLAGES.map((v, i) => `
+        <div class="village-item ${i === activeVillageIndex ? 'active' : ''}" onclick="selectVillage(${i})" id="village-item-${i}">
+            <div class="village-dot ${v.status}"></div>
+            <span class="village-name">${v.name}</span>
+            <span class="village-anomaly" style="color:${getStatusColor(v.status)}">${v.anomaly > 0 ? '+' : ''}${v.anomaly}%</span>
+        </div>
+    `).join('');
+}
+
+function renderGrid() {
+    const grid = document.getElementById('village-grid');
+    grid.innerHTML = VILLAGES.map((v, i) => `
+        <div class="grid-card ${i === activeVillageIndex ? 'active-grid' : ''}" onclick="selectVillage(${i})" id="grid-card-${i}">
+            <div class="grid-card-name">${v.name}</div>
+            <div class="grid-card-row">
+                <span class="grid-card-anomaly" style="color:${getStatusColor(v.status)}">${v.anomaly > 0 ? '+' : ''}${v.anomaly}%</span>
+                <span class="grid-card-status ${v.status}">${v.status.toUpperCase()}</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderMetrics(v) {
+    // Location banner
+    document.getElementById('loc-name').textContent = `${v.name}, ${v.block}`;
+    document.getElementById('loc-coords').textContent = `LAT: ${v.lat}  |  LON: ${v.lon}  |  GRID_REF: ${v.grid}`;
+    document.getElementById('loc-scan').innerHTML = `SCAN_ID: S2A_${v.grid}_20260415<br>CLOUD_MASK: ${Math.floor(Math.random()*12)+3}%  |  PASS: ${Math.floor(Math.random()*4)+1}/4`;
+
+    // Metric cards
+    document.getElementById('m-baseline').textContent = v.baseline + '%';
+    document.getElementById('m-current').textContent = v.current + '%';
+    document.getElementById('m-anomaly').textContent = (v.anomaly > 0 ? '+' : '') + v.anomaly + '%';
+
+    // Current reading color
+    const currentEl = document.getElementById('m-current');
+    currentEl.className = 'metric-value';
+    if (v.status === 'normal') currentEl.classList.add('green');
+    else if (v.status === 'warning') currentEl.classList.add('yellow');
+    else currentEl.classList.add('red');
+
+    // Anomaly color + badge
+    const anomalyVal = document.getElementById('m-anomaly');
+    anomalyVal.className = 'metric-value';
+    const badge = document.getElementById('m-anomaly-badge');
+    const card = document.getElementById('anomaly-card');
+    card.classList.remove('critical-pulse');
+
+    if (v.status === 'critical') {
+        anomalyVal.classList.add('red');
+        badge.className = 'metric-badge danger';
+        badge.textContent = '⚠ THRESHOLD BREACHED';
+        card.classList.add('critical-pulse');
+    } else if (v.status === 'warning') {
+        anomalyVal.classList.add('yellow');
+        badge.className = 'metric-badge warn';
+        badge.textContent = 'MONITOR';
+    } else {
+        anomalyVal.classList.add('green');
+        badge.className = 'metric-badge safe';
+        badge.textContent = 'WITHIN RANGE';
+    }
+}
+
+function renderMoistureChart(v) {
+    const opts = {
+        series: [
+            { name: 'Actual Moisture', data: v.moisture },
+            { name: 'Predicted Trend', data: v.predicted }
+        ],
+        chart: {
+            type: 'area', height: 280,
+            foreColor: '#666',
+            toolbar: { show: false },
+            animations: { enabled: true, easing: 'easeinout', speed: 600 },
+            background: 'transparent',
+        },
+        colors: ['#00ff88', '#ff3333'],
+        fill: {
+            type: 'gradient',
+            gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05, stops: [0, 90, 100] }
+        },
+        dataLabels: { enabled: false },
+        stroke: { curve: 'smooth', width: [3, 3], dashArray: [0, 5] },
+        xaxis: { categories: DAYS, labels: { style: { fontFamily: 'JetBrains Mono', fontSize: '10px' } } },
+        yaxis: { title: { text: 'Soil Moisture (%)', style: { fontFamily: 'JetBrains Mono', fontSize: '10px' } }, min: 0, max: 60 },
+        theme: { mode: 'dark' },
+        grid: { borderColor: '#1a1a1a', strokeDashArray: 4 },
+        tooltip: {
+            theme: 'dark',
+            style: { fontFamily: 'JetBrains Mono' },
+            y: { formatter: (val) => val !== null ? val + '%' : '—' }
+        },
+        legend: { fontFamily: 'JetBrains Mono', fontSize: '11px', labels: { colors: '#888' } },
+        annotations: {
+            yaxis: [{
+                y: v.baseline * 0.6,
+                borderColor: '#ff3333',
+                strokeDashArray: 4,
+                label: {
+                    text: 'CRITICAL THRESHOLD',
+                    borderColor: '#ff3333',
+                    style: { color: '#fff', background: '#ff3333', fontFamily: 'JetBrains Mono', fontSize: '9px' }
+                }
+            }]
+        }
+    };
+
+    if (moistureChart) {
+        moistureChart.updateOptions(opts, true, true);
+    } else {
+        moistureChart = new ApexCharts(document.getElementById('moisture-chart'), opts);
+        moistureChart.render();
+    }
+    document.getElementById('chart-status').textContent = 'LIVE';
+    document.getElementById('chart-status').style.color = '#00ff88';
+}
+
+function renderNdviChart(v) {
+    const barColors = v.ndvi.map(val => val > 0.5 ? '#00ff88' : val > 0.3 ? '#ffcc00' : '#ff3333');
+
+    const opts = {
+        series: [{ name: 'NDVI', data: v.ndvi }],
+        chart: {
+            type: 'bar', height: 220,
+            foreColor: '#666',
+            toolbar: { show: false },
+            animations: { enabled: true, speed: 400 },
+            background: 'transparent',
+        },
+        colors: barColors,
+        plotOptions: {
+            bar: {
+                borderRadius: 3, columnWidth: '60%',
+                distributed: true,
+                dataLabels: { position: 'top' }
+            }
+        },
+        fill: {
+            type: 'gradient',
+            gradient: { shade: 'dark', type: 'vertical', shadeIntensity: 0.4, opacityFrom: 1, opacityTo: 0.8 }
+        },
+        dataLabels: {
+            enabled: true,
+            formatter: (val) => val.toFixed(2),
+            style: { fontFamily: 'JetBrains Mono', fontSize: '9px', colors: ['#888'] },
+            offsetY: -18,
+        },
+        xaxis: { categories: MONTHS, labels: { style: { fontFamily: 'JetBrains Mono', fontSize: '10px' } } },
+        yaxis: { min: 0, max: 1, title: { text: 'NDVI Index', style: { fontFamily: 'JetBrains Mono', fontSize: '10px' } } },
+        theme: { mode: 'dark' },
+        grid: { borderColor: '#1a1a1a', strokeDashArray: 4 },
+        tooltip: {
+            theme: 'dark',
+            style: { fontFamily: 'JetBrains Mono' },
+            y: { formatter: (val) => val.toFixed(3) }
+        },
+        legend: { show: false },
+    };
+
+    if (ndviChart) {
+        ndviChart.updateOptions(opts, true, true);
+    } else {
+        ndviChart = new ApexCharts(document.getElementById('ndvi-chart'), opts);
+        ndviChart.render();
+    }
+}
+
+// ══════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════
+
+function getStatusColor(status) {
+    if (status === 'critical') return 'var(--red)';
+    if (status === 'warning') return 'var(--yellow)';
+    return 'var(--green)';
+}
+
+function selectVillage(index) {
+    activeVillageIndex = index;
+    const v = VILLAGES[index];
+    renderSidebar();
+    renderGrid();
+    renderMetrics(v);
+    renderMoistureChart(v);
+    renderNdviChart(v);
+}
+
+// ══════════════════════════════════════════════════
+//  ALERT FEED GENERATOR
+// ══════════════════════════════════════════════════
+
+const ALERT_TEMPLATES = [
+    { msg: (v) => `[SCAN] ${v.name}: Moisture reading ${v.current}% (baseline ${v.baseline}%)`, type: 'info' },
+    { msg: (v) => `[ANOMALY] ${v.name}: Deviation ${v.anomaly}% detected`, type: v => v.status === 'critical' ? 'critical' : v.status === 'warning' ? 'warning' : 'info' },
+    { msg: (v) => `[NDVI] ${v.name}: Index ${v.ndvi[v.ndvi.length-1].toFixed(2)} — ${v.ndvi[v.ndvi.length-1] < 0.3 ? 'STRESS' : 'STABLE'}`, type: v => v.ndvi[v.ndvi.length-1] < 0.3 ? 'critical' : 'info' },
+    { msg: (v) => `[UPLINK] Sentinel-2 pass complete for GRID ${v.grid}`, type: 'info' },
+    { msg: (v) => `[DISPATCH] BDO alerted for ${v.block} — anomaly threshold breached`, type: 'critical' },
+    { msg: (v) => `[CLOUD] Cloud mask applied: ${Math.floor(Math.random()*15)+2}% coverage`, type: 'info' },
+];
+
+function pushAlert() {
+    const feed = document.getElementById('alert-feed');
+    const v = VILLAGES[Math.floor(Math.random() * VILLAGES.length)];
+    const template = ALERT_TEMPLATES[Math.floor(Math.random() * ALERT_TEMPLATES.length)];
+
+    // Only push dispatch alerts for critical villages
+    if (template.msg(v).includes('[DISPATCH]') && v.status !== 'critical') {
+        setTimeout(pushAlert, 1000);
+        return;
+    }
+
+    const type = typeof template.type === 'function' ? template.type(v) : template.type;
+    const now = new Date().toISOString().split('T')[1].slice(0, 8);
+
+    const entry = document.createElement('div');
+    entry.className = `alert-entry ${type}`;
+    entry.textContent = `[${now}] ${template.msg(v)}`;
+    feed.insertBefore(entry, feed.firstChild);
+
+    // Keep only last 50
+    while (feed.children.length > 50) feed.removeChild(feed.lastChild);
+
+    alertCounter++;
+    document.getElementById('alert-count').textContent = alertCounter;
+
+    setTimeout(pushAlert, Math.random() * 3000 + 1500);
+}
+
+// ══════════════════════════════════════════════════
+//  CLOCK
+// ══════════════════════════════════════════════════
+
+function updateClock() {
+    document.getElementById('header-clock').textContent = new Date().toTimeString().split(' ')[0];
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ══════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════
+
+renderSidebar();
+renderGrid();
+renderMetrics(VILLAGES[0]);
+renderMoistureChart(VILLAGES[0]);
+renderNdviChart(VILLAGES[0]);
+
+// Start alert feed after short delay
+setTimeout(pushAlert, 2000);
+
+</script>
+</body>
+</html>
