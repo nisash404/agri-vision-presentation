@@ -608,21 +608,52 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
 </section>
 
 <section id="s6">
-    <div class="buzzwords">Actionable Insights • Decision Support System (DSS)</div>
-    <h2 class="section-title">Sentinel Dashboard</h2>
-    <div class="dashboard-mockup" data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.2">
-        <div class="dash-header">Dashboard / Region Analysis / Status: CRITICAL</div>
-        <div class="dash-body">
-            <div class="dash-sidebar">
-                <div class="dash-graph" style="background: rgba(255,51,51,0.2); border: 1px solid #ff3333; display:flex; align-items:center; justify-content:center; color:#ff3333; font-weight:bold; text-align: center; padding: 10px;">MOISTURE DROP DETECTED</div>
-                <div id="moisture-chart" style="background: #0a0a0a; border: 1px solid #333; border-radius: 8px; padding: 15px; margin-top: 20px; box-shadow: 0 0 20px rgba(0, 255, 136, 0.05);"></div>
+    <div class="buzzwords">Proof of Concept • Single-Block Analysis • Closed Verification Loop</div>
+    <h2 class="section-title">Sentinel Dashboard // PoC Interface</h2>
+
+    <div class="dashboard-mockup" style="height: auto; max-height: 500px; cursor: default;" data-tilt data-tilt-max="3" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.15">
+        <div class="dash-header" style="justify-content: space-between;">
+            <span>PoC / Single-Block Diagnostic / Village XYZ</span>
+            <span style="color: #ff3333;">● STATUS: CRITICAL</span>
+        </div>
+        <div style="padding: 2rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
+
+            <!-- Target Location -->
+            <div style="grid-column: 1 / -1; background: rgba(0,204,255,0.05); border: 1px solid rgba(0,204,255,0.2); border-radius: 8px; padding: 1.5rem; font-family: monospace; text-align: left;">
+                <div style="color: #555; font-size: 0.75rem; letter-spacing: 3px; margin-bottom: 0.5rem;">TARGET_LOCATION</div>
+                <div style="color: #00ccff; font-size: 1.4rem; font-weight: 900; letter-spacing: 2px;">Village XYZ, Block ABC</div>
+                <div style="color: #444; font-size: 0.8rem; margin-top: 0.5rem;">LAT: 17.1231° N &nbsp;|&nbsp; LON: 79.2088° E &nbsp;|&nbsp; GRID_REF: T44P_S2A</div>
             </div>
-            <div class="dash-map">
-                <div style="position:absolute; top:40%; left:40%; width:50px; height:50px; background:radial-gradient(circle, #ff0000, transparent); border-radius:50%;"></div>
+
+            <!-- Historical Baseline -->
+            <div style="background: rgba(0,255,136,0.05); border: 1px solid rgba(0,255,136,0.15); border-radius: 8px; padding: 1.5rem; font-family: monospace; text-align: center;">
+                <div style="color: #555; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 1rem;">HISTORICAL_BASELINE</div>
+                <div style="font-size: 4rem; font-weight: 900; color: #00ff88; text-shadow: 0 0 20px rgba(0,255,136,0.3); line-height: 1;">38%</div>
+                <div style="color: #555; font-size: 0.8rem; margin-top: 0.8rem;">5-Year Avg. Soil Moisture</div>
             </div>
+
+            <!-- Current Reading -->
+            <div style="background: rgba(255,200,0,0.05); border: 1px solid rgba(255,200,0,0.15); border-radius: 8px; padding: 1.5rem; font-family: monospace; text-align: center;">
+                <div style="color: #555; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 1rem;">CURRENT_SAT_READING</div>
+                <div style="font-size: 4rem; font-weight: 900; color: #ffcc00; text-shadow: 0 0 20px rgba(255,200,0,0.3); line-height: 1;">22%</div>
+                <div style="color: #555; font-size: 0.8rem; margin-top: 0.8rem;">Live Sentinel-2 Pass</div>
+            </div>
+
+            <!-- Computed Anomaly -->
+            <div style="background: rgba(255,51,51,0.08); border: 2px solid rgba(255,51,51,0.4); border-radius: 8px; padding: 1.5rem; font-family: monospace; text-align: center; box-shadow: 0 0 30px rgba(255,51,51,0.15); animation: sirenPulse 2s infinite alternate;">
+                <div style="color: #555; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 1rem;">COMPUTED_ANOMALY</div>
+                <div style="font-size: 4rem; font-weight: 900; color: #ff3333; text-shadow: 0 0 25px rgba(255,51,51,0.5); line-height: 1;">-16%</div>
+                <div style="color: #ff3333; font-size: 0.85rem; margin-top: 0.8rem; font-weight: bold; letter-spacing: 2px;">⚠ THRESHOLD BREACHED (-15%)</div>
+            </div>
+
+        </div>
+        <div style="border-top: 1px solid #222; padding: 1rem 2rem; font-family: monospace; font-size: 0.8rem; color: #555; display: flex; justify-content: space-between;">
+            <span>SCAN_ID: S2A_T44P_20260415_B08_B04 &nbsp;|&nbsp; CLOUD_MASK: 8%</span>
+            <span style="color: #ff3333;">→ BDO ALERT DISPATCHED</span>
         </div>
     </div>
-    <div class="pitch">"All this complex math is distilled into a zero-learning-curve dashboard for local authorities. Red means danger. Green means safe."</div>
+
+    <div class="pitch" style="margin-top: 2rem;">"This is the Sentinel Dashboard, restricted to our Proof-of-Concept parameters for Village XYZ. We stripped away the state-wide visualization to focus purely on the raw diagnostic metrics: the baseline, the current reading, and the anomaly. When the computed anomaly breaches our threshold, this interface flags the critical alert for the BDO."</div>
 </section>
 
 <section id="s-access">
@@ -734,54 +765,6 @@ h2.section-title { font-size: 2.5rem; margin-bottom: 2rem; color: #fff; }
     <div class="pitch" style="margin-top: 1rem; font-size: 1.2rem;">"Our architecture is a streamlined data pipeline. It looks complex, but beneath the hood it relies on powerful, open-source python libraries to process satellite data seamlessly."</div>
 </section>
 
-<section id="s12">
-    <div class="buzzwords" style="color:#ff3333;">Proof of Concept • Single-Block Analysis • Closed Verification Loop</div>
-    <h2 class="section-title">Sentinel Dashboard // PoC Interface</h2>
-
-    <div class="dashboard-mockup" style="height: auto; max-height: 500px; cursor: default;">
-        <div class="dash-header" style="justify-content: space-between;">
-            <span>PoC / Single-Block Diagnostic / Village XYZ</span>
-            <span style="color: #ff3333;">● STATUS: CRITICAL</span>
-        </div>
-        <div style="padding: 2rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
-
-            <!-- Metric 1: Target -->
-            <div style="grid-column: 1 / -1; background: rgba(0,204,255,0.05); border: 1px solid rgba(0,204,255,0.2); border-radius: 8px; padding: 1.5rem; font-family: monospace; text-align: left;">
-                <div style="color: #555; font-size: 0.75rem; letter-spacing: 3px; margin-bottom: 0.5rem;">TARGET_LOCATION</div>
-                <div style="color: #00ccff; font-size: 1.4rem; font-weight: 900; letter-spacing: 2px;">Village XYZ, Block ABC</div>
-                <div style="color: #444; font-size: 0.8rem; margin-top: 0.5rem;">LAT: 17.1231° N &nbsp;|&nbsp; LON: 79.2088° E &nbsp;|&nbsp; GRID_REF: T44P_S2A</div>
-            </div>
-
-            <!-- Metric 2: Historical Baseline -->
-            <div style="background: rgba(0,255,136,0.05); border: 1px solid rgba(0,255,136,0.15); border-radius: 8px; padding: 1.5rem; font-family: monospace; text-align: center;">
-                <div style="color: #555; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 1rem;">HISTORICAL_BASELINE</div>
-                <div style="font-size: 4rem; font-weight: 900; color: #00ff88; text-shadow: 0 0 20px rgba(0,255,136,0.3); line-height: 1;">38%</div>
-                <div style="color: #555; font-size: 0.8rem; margin-top: 0.8rem;">5-Year Avg. Soil Moisture</div>
-            </div>
-
-            <!-- Metric 3: Current Reading -->
-            <div style="background: rgba(255,200,0,0.05); border: 1px solid rgba(255,200,0,0.15); border-radius: 8px; padding: 1.5rem; font-family: monospace; text-align: center;">
-                <div style="color: #555; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 1rem;">CURRENT_SAT_READING</div>
-                <div style="font-size: 4rem; font-weight: 900; color: #ffcc00; text-shadow: 0 0 20px rgba(255,200,0,0.3); line-height: 1;">22%</div>
-                <div style="color: #555; font-size: 0.8rem; margin-top: 0.8rem;">Live Sentinel-2 Pass</div>
-            </div>
-
-            <!-- Metric 4: Computed Anomaly -->
-            <div style="background: rgba(255,51,51,0.08); border: 2px solid rgba(255,51,51,0.4); border-radius: 8px; padding: 1.5rem; font-family: monospace; text-align: center; box-shadow: 0 0 30px rgba(255,51,51,0.15); animation: sirenPulse 2s infinite alternate;">
-                <div style="color: #555; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 1rem;">COMPUTED_ANOMALY</div>
-                <div style="font-size: 4rem; font-weight: 900; color: #ff3333; text-shadow: 0 0 25px rgba(255,51,51,0.5); line-height: 1;">-16%</div>
-                <div style="color: #ff3333; font-size: 0.85rem; margin-top: 0.8rem; font-weight: bold; letter-spacing: 2px;">⚠ THRESHOLD BREACHED (-15%)</div>
-            </div>
-
-        </div>
-        <div style="border-top: 1px solid #222; padding: 1rem 2rem; font-family: monospace; font-size: 0.8rem; color: #555; display: flex; justify-content: space-between;">
-            <span>SCAN_ID: S2A_T44P_20260415_B08_B04 &nbsp;|&nbsp; CLOUD_MASK: 8%</span>
-            <span style="color: #ff3333;">→ BDO ALERT DISPATCHED</span>
-        </div>
-    </div>
-
-    <div class="pitch" style="margin-top: 2rem;">"This is the Sentinel Dashboard, restricted to our Proof-of-Concept parameters for Village XYZ. We stripped away the state-wide visualization to focus purely on the raw diagnostic metrics: the baseline, the current reading, and the anomaly. When the computed anomaly breaches our threshold, this interface flags the critical alert for the BDO."</div>
-</section>
 
 <section id="s13">
     <div class="buzzwords" style="color: #00ff88;">End of Transmission</div>
